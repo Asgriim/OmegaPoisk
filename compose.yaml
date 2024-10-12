@@ -1,9 +1,46 @@
 services:
   postgres:
     image: 'postgres:latest'
+    container_name: 'postgres-db'
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      - 'POSTGRES_DB=omega_db'
+      - 'POSTGRES_PASSWORD=omega'
+      - 'POSTGRES_USER=omega'
     ports:
-      - '5432'
+      - '5432:5432'
+    healthcheck:
+      test: "pg_isready -d omega_db -U omega"
+      interval: 5s
+      timeout: 2s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - 'postgres_data:/var/lib/postgresql/data'
+    networks:
+      - 'springboot-network'
+
+  spring-app:
+    image: omegapoisk:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres-db:5432/omega_db'
+      SPRING_DATASOURCE_USERNAME: 'omega'
+      SPRING_DATASOURCE_PASSWORD: 'omega'
+      SPRING_FLYWAY_ENABLED: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - '8080:8080'
+    networks:
+      - springboot-network
+
+
+networks:
+  springboot-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
