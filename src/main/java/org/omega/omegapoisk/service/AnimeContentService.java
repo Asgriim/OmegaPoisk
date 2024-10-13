@@ -17,19 +17,19 @@ public class AnimeContentService  {
     private final AnimeRepository animeRepository;
     private final ContentService contentService;
 
-    List<Anime> getAll() {
+    public List<Anime> getAll() {
         return (List<Anime>) animeRepository.findAll();
     }
 
-    Anime getById(Long id) {
+    public Anime getById(Long id) {
         return animeRepository.findById(id).orElse(null);
     }
 
-    List<ContentCardDTO<Anime>> getAllCards() {
+    public List<ContentCardDTO<Anime>> getAllCards() {
         return contentService.getAllContentCards(animeRepository);
     }
 
-    List<ContentCardDTO<Anime>> getCardsPage(int pageNumber) {
+    public List<ContentCardDTO<Anime>> getCardsPage(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, contentService.getPageSize());
         return contentService.getContentCardsPage(animeRepository, pageable);
     }
