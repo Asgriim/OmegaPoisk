@@ -25,6 +25,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
+      SPRING_PAGE_SIZE: 5
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres-db:5432/omega_db'
       SPRING_DATASOURCE_USERNAME: 'omega'
       SPRING_DATASOURCE_PASSWORD: 'omega'

@@ -1,6 +1,7 @@
 spring:
   application:
     name: OmegaPoisk
+    page-size: ${SPRING_PAGE_SIZE}
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
