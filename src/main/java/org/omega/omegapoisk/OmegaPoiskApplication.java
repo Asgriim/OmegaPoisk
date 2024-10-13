@@ -2,7 +2,11 @@ package org.omega.omegapoisk;
 
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.entity.content.Anime;
+import org.omega.omegapoisk.entity.user.RoleEntity;
+import org.omega.omegapoisk.entity.user.User;
 import org.omega.omegapoisk.repository.content.AnimeRepository;
+import org.omega.omegapoisk.repository.user.RoleRepository;
+import org.omega.omegapoisk.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +16,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @RequiredArgsConstructor
 public class OmegaPoiskApplication implements CommandLineRunner {
 
+    //todo DELETE ALL
     private final AnimeRepository animeRepository;
+    private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
 
     public static void main(String[] args)  {
         SpringApplication.run(OmegaPoiskApplication.class, args);
@@ -20,8 +27,9 @@ public class OmegaPoiskApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Iterable<Anime> all = animeRepository.findAll();
+        Iterable<RoleEntity> all = roleRepository.findAll();
         System.out.println(all);
-        System.out.println(animeRepository.countAll());
+        Iterable<User> all1 = userRepository.findAll();
+        System.out.println(all1);
     }
 }
