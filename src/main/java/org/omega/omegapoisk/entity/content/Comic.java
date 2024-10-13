@@ -1,9 +1,6 @@
 package org.omega.omegapoisk.entity.content;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -11,6 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Table("comic")
 public class Comic extends Content {
     @Column("is_colored")
