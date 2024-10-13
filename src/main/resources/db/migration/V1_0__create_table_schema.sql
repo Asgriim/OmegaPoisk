@@ -109,8 +109,8 @@ CREATE TABLE IF NOT EXISTS  content_tags (
 -- Таблица review
 CREATE TABLE IF NOT EXISTS review
 (
-    id        SERIAL PRIMARY KEY,
-    txt      TEXT,
+    id         SERIAL PRIMARY KEY,
+    txt        TEXT,
     user_id    INT,
     content_id INT,
     FOREIGN KEY (user_id) REFERENCES user_ (id) ON DELETE CASCADE,
