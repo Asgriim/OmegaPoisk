@@ -10,3 +10,5 @@ spring:
     enabled: ${SPRING_FLYWAY_ENABLED:true}
   jackson:
     property-naming-strategy: SNAKE_CASE
+jwt:
+  secret: ${JWT_SECRET}
