@@ -30,6 +30,7 @@ services:
       SPRING_DATASOURCE_USERNAME: 'omega'
       SPRING_DATASOURCE_PASSWORD: 'omega'
       SPRING_FLYWAY_ENABLED: 'true'
+      API_PREFIX: '/api/v1'
       JWT_SECRET: 'aboba'
     depends_on:
       postgres:

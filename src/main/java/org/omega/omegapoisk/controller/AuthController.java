@@ -10,6 +10,7 @@ import org.omega.omegapoisk.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDTO userDTO){
+    public ResponseEntity<?> login(@Validated @RequestBody UserDTO userDTO){
         User user = (User) userService.loadUserByUsername(userDTO.getLogin());
 
         if (!encoder.matches(userDTO.getPass(),user.getPassword())) {
@@ -40,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDTO userDTO){
+    public ResponseEntity<?> register(@Validated @RequestBody UserDTO userDTO){
         User user = new User();
 
         user.setLogin(userDTO.getLogin());

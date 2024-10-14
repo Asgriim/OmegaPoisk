@@ -24,7 +24,11 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByLogin(username).orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+        User user = userRepository.findByLogin(username).orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+        RoleEntity roleEntity = roleRepository.findById(user.getRoleId()).orElseThrow(InvaliUserOrPasswordException::new);
+        user.setRoleId(roleEntity.getId());
+        user.setRole(roleEntity);
+        return user;
     }
 
     public User getUserFromContext() {
@@ -36,11 +40,12 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void registerUser(User user) {
         if (userRepository.findByLogin(user.getLogin()).isPresent()) {
-            throw new UserAlreadyExistsException();
+            throw new UserAlreadyExistsException(user.getLogin() + ": already exist");
         }
 
         RoleEntity roleEntity = roleRepository.findByName(user.getRole().getName()).orElseThrow(InvaliUserOrPasswordException::new);
         user.setRole(roleEntity);
+        user.setRoleId(roleEntity.getId());
         userRepository.save(user);
     }
 

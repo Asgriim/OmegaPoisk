@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,7 +27,10 @@ public class User implements UserDetails {
     private String password;
     private String email;
 
-    @MappedCollection(idColumn = "id")
+    @Column("role_id")
+    private long roleId;
+
+    @Transient
     private RoleEntity role;
 
     @Override
