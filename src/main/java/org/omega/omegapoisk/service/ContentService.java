@@ -1,5 +1,6 @@
 package org.omega.omegapoisk.service;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.dto.content.ContentCardDTO;
@@ -19,7 +20,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Getter
 public class ContentService <T extends Content>{
-    @Value("${spring.application.page-size}")
     private int pageSize;
 
     private final AvgRatingRepository avgRatingRepository;

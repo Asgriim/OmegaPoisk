@@ -1,9 +1,11 @@
 package org.omega.omegapoisk.service;
 
+import lombok.Getter;
 import org.omega.omegapoisk.dto.content.ContentCardDTO;
 import org.omega.omegapoisk.entity.content.Anime;
 import org.omega.omegapoisk.repository.content.AnimeRepository;
 import org.omega.omegapoisk.repository.rating.AvgRatingRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,20 +14,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Getter
 public class AnimeContentService  {
     private final AnimeRepository animeRepository;
     private final AvgRatingRepository avgRatingRepository;
-
     private final ContentService<Anime> contentService;
+
+    @Value("${spring.application.page-size}")
+    private int pageSize;
 
     public AnimeContentService(AnimeRepository animeRepository, AvgRatingRepository avgRatingRepository) {
         this.animeRepository = animeRepository;
         this.avgRatingRepository = avgRatingRepository;
         this.contentService = new ContentService<>(avgRatingRepository, animeRepository);
-    }
-
-    public List<Anime> getAll() {
-        return (List<Anime>) animeRepository.findAll();
     }
 
     public Anime getById(Long id) {
@@ -36,17 +37,14 @@ public class AnimeContentService  {
         return contentService.getCardById(id);
     }
 
-    public List<ContentCardDTO<Anime>> getAllCards() {
-        return contentService.getAllContentCards(animeRepository);
-    }
 
     public List<ContentCardDTO<Anime>> getCardsPage(int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, contentService.getPageSize());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return contentService.getContentCardsPage(pageable);
     }
 
     public List<Anime> getAnimePage(int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, contentService.getPageSize());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return animeRepository.findAll(pageable).stream().toList();
     }
 
@@ -65,4 +63,7 @@ public class AnimeContentService  {
         animeRepository.deleteById(id);
     }
 
+    public long countAll() {
+        return animeRepository.countAll();
+    }
 }
