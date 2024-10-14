@@ -50,6 +50,6 @@ public class AuthController {
 
         userService.registerUser(user);
 
-        return login(userDTO);
+        return ResponseEntity.status(201).build();
     }
 }
