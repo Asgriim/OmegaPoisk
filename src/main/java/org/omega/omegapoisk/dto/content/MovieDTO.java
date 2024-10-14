@@ -12,7 +12,7 @@ import org.omega.omegapoisk.entity.content.Movie;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovieDTO extends ContentDTO {
-    @Min(0)
+    @Min(1)
     private int duration;
 
     // Constructor to convert from Movie entity to MovieDTO

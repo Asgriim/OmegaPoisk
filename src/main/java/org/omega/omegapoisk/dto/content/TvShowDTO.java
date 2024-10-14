@@ -12,7 +12,7 @@ import org.omega.omegapoisk.entity.content.TvShow;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TvShowDTO extends ContentDTO {
-    @Min(0)
+    @Min(1)
     private int seriesNum;
 
     // Constructor to convert from TvShow entity to TvShowDTO
