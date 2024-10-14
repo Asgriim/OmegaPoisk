@@ -47,12 +47,20 @@ public class ComicController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable long id) {
-        return ResponseEntity.ok(comicContentService.getById(id));
+        Comic byId = comicContentService.getById(id);
+        if (byId == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(byId);
     }
 
     @GetMapping("/{id}/card")
     public ResponseEntity<?> getByCardById(@PathVariable long id) {
-        return ResponseEntity.ok(comicContentService.getContentCardById(id));
+        ContentCardDTO<Comic> byId = comicContentService.getContentCardById(id);
+        if (byId == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(byId);
     }
 
 //    todo AUTH CHECK IMPL

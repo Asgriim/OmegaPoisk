@@ -3,6 +3,7 @@ package org.omega.omegapoisk.controller.content;
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.dto.content.GameDTO;
 import org.omega.omegapoisk.dto.content.ContentCardDTO;
+import org.omega.omegapoisk.entity.content.Anime;
 import org.omega.omegapoisk.entity.content.Game;
 import org.omega.omegapoisk.service.content.GameContentService;
 import org.omega.omegapoisk.utils.HeaderUtils;
@@ -41,12 +42,20 @@ public class GameController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable long id) {
-        return ResponseEntity.ok(gameContentService.getById(id));
+        Game byId = gameContentService.getById(id);
+        if (byId == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(byId);
     }
 
     @GetMapping("/{id}/card")
     public ResponseEntity<?> getByCardById(@PathVariable long id) {
-        return ResponseEntity.ok(gameContentService.getContentCardById(id));
+        ContentCardDTO<Game> byId = gameContentService.getContentCardById(id);
+        if (byId == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(byId);
     }
 
 //    todo AUTH CHECK IMPL
