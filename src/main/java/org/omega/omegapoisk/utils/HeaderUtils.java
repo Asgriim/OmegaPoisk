@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class HeaderUtils {
 
-    public HttpHeaders createPageHeaders(Pageable pageable, long totalCount) {
+    public HttpHeaders createPageHeaders(int pageNumber, int pageSize, long totalCount) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Page-Count", String.valueOf(pageable.getPageSize()));
-        httpHeaders.add("Page-Number", String.valueOf(pageable.getPageNumber()));
+        httpHeaders.add("Page-Size", String.valueOf(pageSize));
+        httpHeaders.add("Page-Number", String.valueOf(pageNumber));
         httpHeaders.add("Total-Count", String.valueOf(totalCount));
         return httpHeaders;
     }

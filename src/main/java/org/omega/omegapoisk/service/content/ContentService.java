@@ -1,6 +1,5 @@
-package org.omega.omegapoisk.service;
+package org.omega.omegapoisk.service.content;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.dto.content.ContentCardDTO;
@@ -8,7 +7,6 @@ import org.omega.omegapoisk.entity.content.Content;
 import org.omega.omegapoisk.entity.rating.AvgRating;
 import org.omega.omegapoisk.repository.content.BaseContentPagingRepository;
 import org.omega.omegapoisk.repository.rating.AvgRatingRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;

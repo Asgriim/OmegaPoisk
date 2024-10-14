@@ -1,4 +1,4 @@
-package org.omega.omegapoisk.service;
+package org.omega.omegapoisk.service.content;
 
 import lombok.Getter;
 import org.omega.omegapoisk.dto.content.ContentCardDTO;
