@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,14 +28,17 @@ public class ReviewService {
         return reviewRepository.findByContentId(contentId, pageable).stream().toList();
     }
 
+    @Transactional
     public Review create(final Review review) {
         return reviewRepository.save(review);
     }
 
+    @Transactional
     public void delete(final long reviewId) {
         reviewRepository.deleteById(reviewId);
     }
 
+    @Transactional
     public Review update(final Review rating) {
         Review r2 = reviewRepository.findByContentIdAndUserId(rating.getContentId(), rating.getUserId());
         if (r2 != null) {
