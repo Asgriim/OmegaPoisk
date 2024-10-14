@@ -10,10 +10,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omega.omegapoisk.dto.content.AnimeDTO;
-import org.omega.omegapoisk.entity.content.Anime;
-import org.omega.omegapoisk.repository.content.AnimeRepository;
-import org.omega.omegapoisk.service.content.AnimeContentService;
+import org.omega.omegapoisk.dto.content.ComicDTO;
+import org.omega.omegapoisk.entity.content.Comic;
+import org.omega.omegapoisk.repository.content.ComicRepository;
+import org.omega.omegapoisk.service.content.ComicContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AnimeControllerTest {
+class ComicControllerTest {
     @LocalServerPort
     private Integer port;
 
@@ -37,15 +37,15 @@ class AnimeControllerTest {
     );
 
     @Autowired
-    AnimeContentService animeContentService;
+    ComicContentService comicContentService;
 
     @Autowired
-    AnimeRepository animeRepository;
+    ComicRepository comicRepository;
 
     @Value("${spring.application.page-size}")
     int pageSize;
 
-    static Anime anime;
+    static Comic comic;
 
     @BeforeAll
     static void beforeAll() {
@@ -70,10 +70,10 @@ class AnimeControllerTest {
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
 
-        animeRepository.deleteAll();
-        anime = animeContentService.create(new Anime(13));
-        anime.setTitle("86");
-        anime.setDescription("Robots.txt");
+        comicRepository.deleteAll();
+        comic = comicContentService.create(new Comic(true, 13));
+        comic.setTitle("86");
+        comic.setDescription("Robots.txt");
 
     }
 
@@ -89,10 +89,10 @@ class AnimeControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/anime/" + anime.getId())
+                .get("/api/v1/content/comic/" + comic.getId())
                 .then()
                 .statusCode(200)
-                .body("series_num", equalTo(anime.getSeriesNum()));
+                .body("chapters_count", equalTo(comic.getChaptersCount()));
     }
 
     @Test
@@ -100,23 +100,23 @@ class AnimeControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/anime/" + anime.getId() + "/card")
+                .get("/api/v1/content/comic/" + comic.getId() + "/card")
                 .then()
                 .statusCode(200)
-                .body("content.series_num", equalTo(anime.getSeriesNum()));
+                .body("content.chapters_count", equalTo(comic.getChaptersCount()));
     }
 
     @Test
     void shouldGetPage() {
-        animeRepository.deleteAll();
+        comicRepository.deleteAll();
         for (int i = 0; i < pageSize*2+2; i++) {
-            animeContentService.create(new Anime(13));
+            comicContentService.create(new Comic(true, 13));
         }
 
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/anime?page=0")
+                .get("/api/v1/content/comic?page=0")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
@@ -124,21 +124,21 @@ class AnimeControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/anime?page=1")
+                .get("/api/v1/content/comic?page=1")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/anime?page=2")
+                .get("/api/v1/content/comic?page=2")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(2));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/anime?page=3")
+                .get("/api/v1/content/comic?page=3")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
@@ -146,15 +146,15 @@ class AnimeControllerTest {
 
     @Test
     void shouldGetCardPage() {
-        animeRepository.deleteAll();
+        comicRepository.deleteAll();
         for (int i = 0; i < pageSize*2+2; i++) {
-            animeContentService.create(new Anime(13));
+            comicContentService.create(new Comic(true, 13));
         }
 
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/anime/card?page=0")
+                .get("/api/v1/content/comic/card?page=0")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
@@ -162,21 +162,21 @@ class AnimeControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/anime/card?page=1")
+                .get("/api/v1/content/comic/card?page=1")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/anime/card?page=2")
+                .get("/api/v1/content/comic/card?page=2")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(2));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/anime/card?page=3")
+                .get("/api/v1/content/comic/card?page=3")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
@@ -184,22 +184,22 @@ class AnimeControllerTest {
 
     @Test
     void shouldCreate() {
-        animeRepository.deleteAll();
+        comicRepository.deleteAll();
 
         int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
 
-        Anime anime1 = new Anime(seriesNum);
-        anime1.setId(1L);
-        anime1.setTitle(title);
-        anime1.setDescription(desc);
+        Comic comic1 = new Comic(true, seriesNum);
+        comic1.setId(1L);
+        comic1.setTitle(title);
+        comic1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new AnimeDTO(anime1))
+                .body(new ComicDTO(comic1))
                 .when()
-                .post("/api/v1/content/anime")
+                .post("/api/v1/content/comic")
                 .then()
                 .statusCode(200)
                 .extract().response();
@@ -207,7 +207,7 @@ class AnimeControllerTest {
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/anime/{id}")
+                .get("/api/v1/content/comic/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", equalTo(response.path("id")));
@@ -215,43 +215,43 @@ class AnimeControllerTest {
 
     @Test
     void shouldUpdate() {
-        animeRepository.deleteAll();
+        comicRepository.deleteAll();
 
         int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
         String changed = "Changed";
 
-        Anime anime1 = new Anime(seriesNum);
-        anime1.setId(1L);
-        anime1.setTitle(title);
-        anime1.setDescription(desc);
+        Comic comic1 = new Comic(true, seriesNum);
+        comic1.setId(1L);
+        comic1.setTitle(title);
+        comic1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new AnimeDTO(anime1))
+                .body(new ComicDTO(comic1))
                 .when()
-                .post("/api/v1/content/anime")
+                .post("/api/v1/content/comic")
                 .then()
                 .statusCode(200)
                 .extract().response();
 
         Integer extractedId = response.path("id");
-        anime1.setId(extractedId.longValue());
-        anime1.setTitle(changed);
+        comic1.setId(extractedId.longValue());
+        comic1.setTitle(changed);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(new AnimeDTO(anime1))
+                .body(new ComicDTO(comic1))
                 .when()
-                .put("/api/v1/content/anime")
+                .put("/api/v1/content/comic")
                 .then()
                 .statusCode(200);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/anime/{id}")
+                .get("/api/v1/content/comic/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", equalTo(response.path("id")))
@@ -260,22 +260,22 @@ class AnimeControllerTest {
 
     @Test
     void shouldDelete() {
-        animeRepository.deleteAll();
+        comicRepository.deleteAll();
 
         int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
 
-        Anime anime1 = new Anime(seriesNum);
-        anime1.setId(1L);
-        anime1.setTitle(title);
-        anime1.setDescription(desc);
+        Comic comic1 = new Comic(true, seriesNum);
+        comic1.setId(1L);
+        comic1.setTitle(title);
+        comic1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new AnimeDTO(anime1))
+                .body(new ComicDTO(comic1))
                 .when()
-                .post("/api/v1/content/anime")
+                .post("/api/v1/content/comic")
                 .then()
                 .statusCode(200)
                 .extract().response();
@@ -283,21 +283,21 @@ class AnimeControllerTest {
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .delete("/api/v1/content/anime/{id}")
+                .delete("/api/v1/content/comic/{id}")
                 .then()
                 .statusCode(200);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/anime/{id}")
+                .get("/api/v1/content/comic/{id}")
                 .then()
                 .statusCode(404);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/anime/{id}/card")
+                .get("/api/v1/content/comic/{id}/card")
                 .then()
                 .statusCode(404);
     }

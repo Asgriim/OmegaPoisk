@@ -1,10 +1,9 @@
-package org.omega.omegapoisk.controller;
+package org.omega.omegapoisk.controller.studio;
 
 
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.entity.studio.Studio;
-import org.omega.omegapoisk.entity.tag.Tag;
-import org.omega.omegapoisk.service.StudioService;
+import org.omega.omegapoisk.service.studio.StudioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

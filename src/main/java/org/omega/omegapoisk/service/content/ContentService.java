@@ -41,11 +41,6 @@ public class ContentService <T extends Content>{
         return result;
     }
 
-    public List<ContentCardDTO<T>> getAllContentCards(BaseContentPagingRepository<T> repository) {
-        Iterable<T> all = repository.findAll();
-        return createContentCardDTOList(all);
-    }
-
     public List<ContentCardDTO<T>> getContentCardsPage(Pageable pageable) {
         Page<T> all = repository.findAll(pageable);
         return createContentCardDTOList(all.getContent());

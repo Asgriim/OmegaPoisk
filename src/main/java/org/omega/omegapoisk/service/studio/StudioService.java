@@ -1,7 +1,8 @@
-package org.omega.omegapoisk.service;
+package org.omega.omegapoisk.service.studio;
 
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.entity.studio.Studio;
+import org.omega.omegapoisk.entity.tag.Tag;
 import org.omega.omegapoisk.repository.studio.StudioRepository;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,9 @@ public class StudioService {
 
     public void deleteContentFromStudio(long studioId, long contentId) {
         studioRepository.removeContentFromStudioById(studioId, contentId);
+    }
+
+    public List<Studio> findByContentId(final long contentId) {
+        return studioRepository.findByContentId(contentId);
     }
 }
