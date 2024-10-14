@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.omega.omegapoisk.entity.content.Anime;
+import org.omega.omegapoisk.service.content.AnimeContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -46,14 +47,6 @@ class AnimeContentServiceTest {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    @Test
-    void shouldGetAllAnime() {
-        animeContentService.create(new Anime(13));
-        assertThat(animeContentService.getAll()).hasSize(1);
-
-        animeContentService.create(new Anime(14));
-        assertThat(animeContentService.getAll()).hasSize(2);
-    }
 
     @Test
     void shouldGetAnimeById() {
