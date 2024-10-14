@@ -11,4 +11,10 @@ public interface TagRepository extends CrudRepository<Tag, Long> {
 
     @Query("SELECT * FROM content_tags join public.tags t on t.id = content_tags.tag_id where content_id = :contendId ")
     List<Tag> findByContentId(@Param("contendId") long contentId);
+
+    @Query("DELETE FROM content_tags WHERE content_id = :contentId and tag_id = :tagId")
+    void deleteByContentIdAndTagId(long contentId, long tagId);
+
+    @Query("INSERT INTO content_tags VALUES (:contentId, :tagId)")
+    void addTagToContent(long contentId, long tagId);
 }
