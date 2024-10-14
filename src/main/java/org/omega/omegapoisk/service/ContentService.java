@@ -2,7 +2,7 @@ package org.omega.omegapoisk.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.omega.omegapoisk.dto.ContentCardDTO;
+import org.omega.omegapoisk.dto.content.ContentCardDTO;
 import org.omega.omegapoisk.entity.content.Content;
 import org.omega.omegapoisk.entity.rating.AvgRating;
 import org.omega.omegapoisk.repository.content.BaseContentPagingRepository;
@@ -25,17 +25,19 @@ public class ContentService {
 
     private final AvgRatingRepository avgRatingRepository;
 
+    <T extends Content> ContentCardDTO<T> createCard(T content) {
+        Optional<AvgRating> avgRating = avgRatingRepository.findByContentId(content.getId());
+        ContentCardDTO<T> dto = new ContentCardDTO<>();
+        dto.setContent(content);
+        avgRating.ifPresent(rating -> dto.setAvgRating(rating.getAvgRate()));
+        return dto;
+    }
+
     <T extends Content> List<ContentCardDTO<T>> createContentCardDTOList(Iterable<T> iterable) {
         List<ContentCardDTO<T>> result = new ArrayList<>();
 
         iterable.forEach(
-                c -> {
-                    Optional<AvgRating> avgRating = avgRatingRepository.findByContentId(c.getId());
-                    ContentCardDTO<T> dto = new ContentCardDTO<>();
-                    dto.setContent(c);
-                    avgRating.ifPresent(rating -> dto.setAvgRating(rating.getAvgRate()));
-                    result.add(dto);
-                }
+                c -> result.add(createCard(c))
         );
 
         return result;
@@ -48,8 +50,15 @@ public class ContentService {
 
     <T extends Content> List<ContentCardDTO<T>> getContentCardsPage(BaseContentPagingRepository<T> repository, Pageable pageable) {
         Page<T> all = repository.findAll(pageable);
-
         return createContentCardDTOList(all.getContent());
+    }
+
+    <T extends Content> ContentCardDTO<T> getCardById(BaseContentPagingRepository<T> repository, Long id) {
+        T content = repository.findById(id).orElse(null);
+        if (content == null) {
+            return new ContentCardDTO<T>();
+        }
+        return createCard(content);
     }
 
 }

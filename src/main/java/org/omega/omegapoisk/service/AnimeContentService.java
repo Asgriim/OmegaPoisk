@@ -1,10 +1,9 @@
 package org.omega.omegapoisk.service;
 
 import lombok.RequiredArgsConstructor;
-import org.omega.omegapoisk.dto.ContentCardDTO;
+import org.omega.omegapoisk.dto.content.ContentCardDTO;
 import org.omega.omegapoisk.entity.content.Anime;
 import org.omega.omegapoisk.repository.content.AnimeRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,10 @@ public class AnimeContentService  {
         return animeRepository.findById(id).orElse(null);
     }
 
+    public ContentCardDTO<Anime> getContentCardById(Long id) {
+        return contentService.getCardById(animeRepository, id);
+    }
+
     public List<ContentCardDTO<Anime>> getAllCards() {
         return contentService.getAllContentCards(animeRepository);
     }
@@ -32,6 +35,11 @@ public class AnimeContentService  {
     public List<ContentCardDTO<Anime>> getCardsPage(int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, contentService.getPageSize());
         return contentService.getContentCardsPage(animeRepository, pageable);
+    }
+
+    public List<Anime> getAnimePage(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, contentService.getPageSize());
+        return animeRepository.findAll(pageable).stream().toList();
     }
 
 }
