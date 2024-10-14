@@ -23,6 +23,6 @@ public class RoleEntity {
     private String name;
 
     Role getRole() {
-        return Role.valueOf(name);
+        return Role.valueOf(name.toUpperCase());
     }
 }

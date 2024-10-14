@@ -30,6 +30,9 @@ public class RatingController {
     public ResponseEntity<?> getMyRating(@PathVariable int id) {
         User userFromContext = userService.getUserFromContext();
         Rating rating = ratingService.findByUserAndContentId(id, (int) userFromContext.getId());
+        if (rating == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(new RatingDTO(rating));
     }
 
