@@ -1,4 +1,15 @@
 spring:
+  application:
+    name: OmegaPoisk
+    page-size: 5
   datasource:
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:postgresql://db
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+jwt:
+  secret: 'test'
+server:
+  servlet:
+    context-path: '/api/v1'
