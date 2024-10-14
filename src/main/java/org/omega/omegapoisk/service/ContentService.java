@@ -10,22 +10,22 @@ import org.omega.omegapoisk.repository.rating.AvgRatingRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Service
 @Getter
-public class ContentService {
+public class ContentService <T extends Content>{
     @Value("${spring.application.page-size}")
     private int pageSize;
 
     private final AvgRatingRepository avgRatingRepository;
+    private final BaseContentPagingRepository<T> repository;
 
-    <T extends Content> ContentCardDTO<T> createCard(T content) {
+    public ContentCardDTO<T> createCard(T content) {
         Optional<AvgRating> avgRating = avgRatingRepository.findByContentId(content.getId());
         ContentCardDTO<T> dto = new ContentCardDTO<>();
         dto.setContent(content);
@@ -33,7 +33,7 @@ public class ContentService {
         return dto;
     }
 
-    <T extends Content> List<ContentCardDTO<T>> createContentCardDTOList(Iterable<T> iterable) {
+    public List<ContentCardDTO<T>> createContentCardDTOList(Iterable<T> iterable) {
         List<ContentCardDTO<T>> result = new ArrayList<>();
 
         iterable.forEach(
@@ -43,22 +43,40 @@ public class ContentService {
         return result;
     }
 
-    <T extends Content> List<ContentCardDTO<T>> getAllContentCards(BaseContentPagingRepository<T> repository) {
+    public List<ContentCardDTO<T>> getAllContentCards(BaseContentPagingRepository<T> repository) {
         Iterable<T> all = repository.findAll();
         return createContentCardDTOList(all);
     }
 
-    <T extends Content> List<ContentCardDTO<T>> getContentCardsPage(BaseContentPagingRepository<T> repository, Pageable pageable) {
+    public List<ContentCardDTO<T>> getContentCardsPage(Pageable pageable) {
         Page<T> all = repository.findAll(pageable);
         return createContentCardDTOList(all.getContent());
     }
 
-    <T extends Content> ContentCardDTO<T> getCardById(BaseContentPagingRepository<T> repository, Long id) {
+    public ContentCardDTO<T> getCardById(Long id) {
         T content = repository.findById(id).orElse(null);
         if (content == null) {
             return new ContentCardDTO<T>();
         }
         return createCard(content);
+    }
+
+    @Transactional
+    public T createContent(T content) {
+        content.setId(repository.getNextContentId());
+        content.setNew(true);
+        return repository.save(content);
+    }
+
+    @Transactional
+    public T updateContent(T content) {
+        content.setNew(false);
+        return repository.save(content);
+    }
+
+    @Transactional
+    public void delete(T content) {
+        repository.deleteById(content.getId());
     }
 
 }
