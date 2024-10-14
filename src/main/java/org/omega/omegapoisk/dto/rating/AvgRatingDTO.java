@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.omega.omegapoisk.entity.rating.AvgRating;
 
 @Data
 @AllArgsConstructor
@@ -14,9 +15,14 @@ import lombok.NoArgsConstructor;
 public class AvgRatingDTO {
     @Min(1)  // Rating value should be at least 1
     @Max(10)  // Rating value should be at most 10
-    private int value;
+    private double value;
 
     @NotNull(message = "Content ID cannot be null")
     @Positive(message = "Content ID must be positive")
     private int contentId;
+
+    public AvgRatingDTO(AvgRating avgRating) {
+        this.value = avgRating.getAvgRate();
+        this.contentId = avgRating.getContentId();
+    }
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.*;
+import org.omega.omegapoisk.entity.rating.Review;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +17,16 @@ public class ReviewDTO {
     @NotNull(message = "Content ID cannot be null")
     @Positive(message = "Content ID must be positive")
     private int contentId;
+
+    public ReviewDTO(Review review) {
+        this.txt = review.getTxt();
+        this.contentId = review.getContentId();
+    }
+
+    public Review toEntity() {
+        Review review = new Review();
+        review.setTxt(this.txt);
+        review.setContentId(this.contentId);
+        return review;
+    }
 }
