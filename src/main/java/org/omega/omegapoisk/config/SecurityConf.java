@@ -32,15 +32,14 @@ public class SecurityConf {
         http
                 .cors(cors -> cors.disable())
                 .csrf(cs -> cs.disable())
-//                .authorizeHttpRequests(a -> a.requestMatchers("**").permitAll())
+                .addFilterBefore(filter(), AuthorizationFilter.class)
                 .addFilterBefore(filter(), AuthorizationFilter.class)
                 .authorizeHttpRequests(
-                        auth ->
-                                auth.requestMatchers("/**")
-                        .permitAll()
-
-
-                );
+                        auth -> auth.requestMatchers("**").permitAll()
+//                        auth -> auth.requestMatchers("/auth/**").permitAll()
+                )
+//                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+        ;
 
         return http.build();
     }

@@ -1,6 +1,7 @@
 package org.omega.omegapoisk.entity.content;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public abstract class Content implements Persistable<Long> {
     private String title;
     private String description;
 
+    @JsonIgnore
     @Transient
     boolean isNew;
 

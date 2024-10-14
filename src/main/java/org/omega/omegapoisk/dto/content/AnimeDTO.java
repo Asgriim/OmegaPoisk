@@ -12,7 +12,7 @@ import org.omega.omegapoisk.entity.content.Anime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnimeDTO extends ContentDTO {
-    @Min(0)
+    @Min(1)
     private int seriesNum;
 
     // Constructor to convert from Anime entity to AnimeDTO

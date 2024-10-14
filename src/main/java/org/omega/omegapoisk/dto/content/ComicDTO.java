@@ -17,7 +17,7 @@ public class ComicDTO extends ContentDTO {
     @NotNull
     private boolean isColored;
 
-    @Min(0)
+    @Min(1)
     private int chaptersCount;
 
     // Constructor to convert from Comic entity to ComicDTO

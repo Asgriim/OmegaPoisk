@@ -54,7 +54,7 @@ public class ContentService <T extends Content>{
     public ContentCardDTO<T> getCardById(Long id) {
         T content = repository.findById(id).orElse(null);
         if (content == null) {
-            return new ContentCardDTO<T>();
+            return null;
         }
         return createCard(content);
     }

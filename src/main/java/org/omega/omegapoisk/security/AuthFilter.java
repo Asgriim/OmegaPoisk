@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.entity.user.User;
 import org.omega.omegapoisk.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -22,8 +23,10 @@ import java.io.IOException;
 @Component
 public class AuthFilter extends OncePerRequestFilter {
 
+    @Autowired
     private UserService userService;
 
+    @Autowired
     private JWT jwt;
 
     @Override
