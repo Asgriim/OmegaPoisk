@@ -25,9 +25,9 @@ public class TvShowController {
     public ResponseEntity<?> getPage(@RequestParam("page") int pageNumber) {
         long totalCount = tvShowContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, tvShowContentService.getPageSize(), totalCount);
-        List<TvShow> TvShowPage = tvShowContentService.getTvShowPage(pageNumber);
+        List<TvShow> tvShowPage = tvShowContentService.getTvShowPage(pageNumber);
 
-        return ResponseEntity.ok().headers(pageHeaders).body(TvShowPage);
+        return ResponseEntity.ok().headers(pageHeaders).body(tvShowPage);
     }
 
     @GetMapping("/card")
