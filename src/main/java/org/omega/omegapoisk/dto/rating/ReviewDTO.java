@@ -18,15 +18,19 @@ public class ReviewDTO {
     @Positive(message = "Content ID must be positive")
     private int contentId;
 
+    private int userID;
+
     public ReviewDTO(Review review) {
         this.txt = review.getTxt();
         this.contentId = review.getContentId();
+        this.userID = review.getUserId();
     }
 
     public Review toEntity() {
         Review review = new Review();
         review.setTxt(this.txt);
         review.setContentId(this.contentId);
+        review.setUserId(this.userID);
         return review;
     }
 }

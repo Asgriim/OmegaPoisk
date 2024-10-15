@@ -26,7 +26,7 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getByContentId(@PathVariable long id, @RequestParam("page") int pageNumber) {
-        List<Review> page = reviewService.getPageByContentId(id, pageNumber);
+        List<ReviewDTO> page = reviewService.getPageByContentId(id, pageNumber).stream().map(ReviewDTO::new).toList();
         long totalCount = reviewService.countAllByContentId(id);
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber,reviewService.getPageSize(), totalCount);
 
