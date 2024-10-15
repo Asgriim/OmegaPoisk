@@ -3,7 +3,6 @@ package org.omega.omegapoisk.controller.content;
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.dto.content.TvShowDTO;
 import org.omega.omegapoisk.dto.content.ContentCardDTO;
-import org.omega.omegapoisk.entity.content.Anime;
 import org.omega.omegapoisk.entity.content.TvShow;
 import org.omega.omegapoisk.service.content.TvShowContentService;
 import org.omega.omegapoisk.utils.HeaderUtils;
@@ -26,7 +25,7 @@ public class TvShowController {
     public ResponseEntity<?> getPage(@RequestParam("page") int pageNumber) {
         long totalCount = tvShowContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, tvShowContentService.getPageSize(), totalCount);
-        List<TvShow> tvShowPage = tvShowContentService.getTvShowPage(pageNumber);
+        List<TvShowDTO> tvShowPage = tvShowContentService.getTvShowPage(pageNumber).stream().map(TvShowDTO::new).toList();
 
         return ResponseEntity.ok().headers(pageHeaders).body(tvShowPage);
     }
@@ -35,7 +34,13 @@ public class TvShowController {
     public ResponseEntity<?> getCardPage(@RequestParam("page") int pageNumber) {
         long totalCount = tvShowContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, tvShowContentService.getPageSize(), totalCount);
-        List<ContentCardDTO<TvShow>> cardsPage = tvShowContentService.getCardsPage(pageNumber);
+        List<ContentCardDTO<TvShowDTO>> cardsPage = tvShowContentService.getCardsPage(pageNumber).stream().map(x -> {
+            ContentCardDTO<TvShowDTO> card = new ContentCardDTO<>();
+            card.setContent(new TvShowDTO(x.getContent()));
+            card.setAvgRating(x.getAvgRating());
+            return card;
+        }).toList();
+
 
         return ResponseEntity.ok().headers(pageHeaders).body(cardsPage);
     }
@@ -46,7 +51,7 @@ public class TvShowController {
         if (byId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId);
+        return ResponseEntity.ok(new TvShowDTO(byId));
     }
 
     @GetMapping("/{id}/card")
@@ -55,28 +60,29 @@ public class TvShowController {
         if (byId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId);
+        ContentCardDTO<TvShowDTO> card = new ContentCardDTO<>();
+        card.setContent(new TvShowDTO(byId.getContent()));
+        card.setAvgRating(byId.getAvgRating());
+        return ResponseEntity.ok(card);
     }
 
-//    todo AUTH CHECK IMPL
-//------------------------------
-//
+
     @PostMapping(value = {"","/"})
     public ResponseEntity<?> create(@RequestBody @Validated TvShowDTO TvShowDTO) {
         TvShow resp = tvShowContentService.create(TvShowDTO.toEntity());
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.status(201).body(new TvShowDTO(resp));
     }
 
     @PutMapping(value = {"","/"})
     public ResponseEntity<?> update(@RequestBody @Validated TvShowDTO TvShowDTO) {
         TvShow update = tvShowContentService.update(TvShowDTO.toEntity());
-        return ResponseEntity.ok(update);
+        return ResponseEntity.status(201).body(new TvShowDTO(update));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         tvShowContentService.delete(id);
-        return ResponseEntity.ok("");
+        return ResponseEntity.status(204).build();
     }
 
 }

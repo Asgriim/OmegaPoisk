@@ -3,7 +3,6 @@ package org.omega.omegapoisk.controller.content;
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.dto.content.GameDTO;
 import org.omega.omegapoisk.dto.content.ContentCardDTO;
-import org.omega.omegapoisk.entity.content.Anime;
 import org.omega.omegapoisk.entity.content.Game;
 import org.omega.omegapoisk.service.content.GameContentService;
 import org.omega.omegapoisk.utils.HeaderUtils;
@@ -26,8 +25,8 @@ public class GameController {
     public ResponseEntity<?> getPage(@RequestParam("page") int pageNumber) {
         long totalCount = gameContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, gameContentService.getPageSize(), totalCount);
-        List<Game> gamePage = gameContentService.getGamePage(pageNumber);
-
+        List<GameDTO> gamePage = gameContentService.getGamePage(pageNumber).stream().map(GameDTO::new).toList();
+        
         return ResponseEntity.ok().headers(pageHeaders).body(gamePage);
     }
 
@@ -35,7 +34,12 @@ public class GameController {
     public ResponseEntity<?> getCardPage(@RequestParam("page") int pageNumber) {
         long totalCount = gameContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, gameContentService.getPageSize(), totalCount);
-        List<ContentCardDTO<Game>> cardsPage = gameContentService.getCardsPage(pageNumber);
+        List<ContentCardDTO<GameDTO>> cardsPage = gameContentService.getCardsPage(pageNumber).stream().map(x -> {
+            ContentCardDTO<GameDTO> card = new ContentCardDTO<>();
+            card.setContent(new GameDTO(x.getContent()));
+            card.setAvgRating(x.getAvgRating());
+            return card;
+        }).toList();
 
         return ResponseEntity.ok().headers(pageHeaders).body(cardsPage);
     }
@@ -46,7 +50,7 @@ public class GameController {
         if (byId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId);
+        return ResponseEntity.ok(new GameDTO(byId));
     }
 
     @GetMapping("/{id}/card")
@@ -55,28 +59,29 @@ public class GameController {
         if (byId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId);
+        ContentCardDTO<GameDTO> card = new ContentCardDTO<>();
+        card.setContent(new GameDTO(byId.getContent()));
+        card.setAvgRating(byId.getAvgRating());
+        return ResponseEntity.ok(card);
     }
 
-//    todo AUTH CHECK IMPL
-//------------------------------
-//
+
     @PostMapping(value = {"","/"})
     public ResponseEntity<?> create(@RequestBody @Validated GameDTO GameDTO) {
         Game resp = gameContentService.create(GameDTO.toEntity());
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.status(201).body(new GameDTO(resp));
     }
 
     @PutMapping(value = {"","/"})
     public ResponseEntity<?> update(@RequestBody @Validated GameDTO GameDTO) {
         Game update = gameContentService.update(GameDTO.toEntity());
-        return ResponseEntity.ok(update);
+        return ResponseEntity.status(201).body(new GameDTO(update));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         gameContentService.delete(id);
-        return ResponseEntity.ok("");
+        return ResponseEntity.status(204).build();
     }
 
 

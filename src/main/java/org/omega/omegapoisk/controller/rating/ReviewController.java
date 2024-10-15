@@ -39,7 +39,7 @@ public class ReviewController {
         Review entity = review.toEntity();
         entity.setUserId((int) userFromContext.getId());
 
-        return ResponseEntity.ok(reviewService.create(entity));
+        return ResponseEntity.status(201).body(new ReviewDTO(reviewService.create(entity)));
     }
 
 
@@ -49,7 +49,7 @@ public class ReviewController {
         Review entity = review.toEntity();
         entity.setUserId((int) userFromContext.getId());
 
-        return ResponseEntity.ok(reviewService.update(entity));
+        return ResponseEntity.status(201).body(new ReviewDTO(reviewService.update(entity)));
     }
 
 

@@ -3,6 +3,7 @@ package org.omega.omegapoisk.dto.content;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,7 @@ import org.omega.omegapoisk.entity.content.Content;
 @NoArgsConstructor
 @ToString
 public abstract class ContentDTO {
+    @Positive(message = "Content ID must be positive")
     private long id;
 
     @NotBlank(message = "Title cannot be blank")

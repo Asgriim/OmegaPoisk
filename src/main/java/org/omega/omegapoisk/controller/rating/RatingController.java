@@ -41,7 +41,7 @@ public class RatingController {
         User userFromContext = userService.getUserFromContext();
         Rating rating = ratingService.findByUserAndContentId(id, (int) userFromContext.getId());
         ratingService.delete(rating.getId());
-        return ResponseEntity.ok("");
+        return ResponseEntity.status(204).build();
     }
 
     @PostMapping(value = {"","/"})
@@ -49,7 +49,7 @@ public class RatingController {
             User userFromContext = userService.getUserFromContext();
             Rating entity = ratingDTO.toEntity();
             entity.setUserId((int) userFromContext.getId());
-            return ResponseEntity.ok(ratingService.create(entity));
+            return ResponseEntity.status(201).body(new RatingDTO(ratingService.create(entity)));
     }
 
     @PutMapping(value = {"","/"})
@@ -57,7 +57,7 @@ public class RatingController {
         User userFromContext = userService.getUserFromContext();
         Rating entity = ratingDTO.toEntity();
         entity.setUserId((int) userFromContext.getId());
-        return ResponseEntity.ok(ratingService.create(entity));
+        return ResponseEntity.status(201).body(new RatingDTO(ratingService.update(entity)));
     }
 
 

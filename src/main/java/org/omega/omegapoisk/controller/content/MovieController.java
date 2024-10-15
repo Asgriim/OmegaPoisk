@@ -3,8 +3,9 @@ package org.omega.omegapoisk.controller.content;
 
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.dto.content.MovieDTO;
+import org.omega.omegapoisk.dto.content.MovieDTO;
 import org.omega.omegapoisk.dto.content.ContentCardDTO;
-import org.omega.omegapoisk.entity.content.Anime;
+import org.omega.omegapoisk.entity.content.Movie;
 import org.omega.omegapoisk.entity.content.Movie;
 import org.omega.omegapoisk.service.content.MovieContentService;
 import org.omega.omegapoisk.utils.HeaderUtils;
@@ -27,7 +28,7 @@ public class MovieController {
     public ResponseEntity<?> getPage(@RequestParam("page") int pageNumber) {
         long totalCount = movieContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, movieContentService.getPageSize(), totalCount);
-        List<Movie> moviePage = movieContentService.getMoviePage(pageNumber);
+        List<MovieDTO> moviePage = movieContentService.getMoviePage(pageNumber).stream().map(MovieDTO::new).toList();
 
         return ResponseEntity.ok().headers(pageHeaders).body(moviePage);
     }
@@ -36,7 +37,12 @@ public class MovieController {
     public ResponseEntity<?> getCardPage(@RequestParam("page") int pageNumber) {
         long totalCount = movieContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, movieContentService.getPageSize(), totalCount);
-        List<ContentCardDTO<Movie>> cardsPage = movieContentService.getCardsPage(pageNumber);
+        List<ContentCardDTO<MovieDTO>> cardsPage = movieContentService.getCardsPage(pageNumber).stream().map(x -> {
+            ContentCardDTO<MovieDTO> card = new ContentCardDTO<>();
+            card.setContent(new MovieDTO(x.getContent()));
+            card.setAvgRating(x.getAvgRating());
+            return card;
+        }).toList();
 
         return ResponseEntity.ok().headers(pageHeaders).body(cardsPage);
     }
@@ -47,7 +53,7 @@ public class MovieController {
         if (byId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId);
+        return ResponseEntity.ok(new MovieDTO(byId));
     }
 
     @GetMapping("/{id}/card")
@@ -56,27 +62,28 @@ public class MovieController {
         if (byId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId);
+        ContentCardDTO<MovieDTO> card = new ContentCardDTO<>();
+        card.setContent(new MovieDTO(byId.getContent()));
+        card.setAvgRating(byId.getAvgRating());
+        return ResponseEntity.ok(card);
     }
 
-//    todo AUTH CHECK IMPL
-//------------------------------
-//
+
     @PostMapping(value = {"","/"})
     public ResponseEntity<?> create(@RequestBody @Validated MovieDTO MovieDTO) {
         Movie resp = movieContentService.create(MovieDTO.toEntity());
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.status(201).body(new MovieDTO(resp));
     }
 
     @PutMapping(value = {"","/"})
     public ResponseEntity<?> update(@RequestBody @Validated MovieDTO MovieDTO) {
         Movie update = movieContentService.update(MovieDTO.toEntity());
-        return ResponseEntity.ok(update);
+        return ResponseEntity.status(201).body(new MovieDTO(update));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         movieContentService.delete(id);
-        return ResponseEntity.ok("");
+        return ResponseEntity.status(204).build();
     }
 }

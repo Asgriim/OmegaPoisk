@@ -26,7 +26,7 @@ public class AnimeController {
     public ResponseEntity<?> getPage(@RequestParam("page") int pageNumber) {
         long totalCount = animeContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber,animeContentService.getPageSize(), totalCount);
-        List<Anime> animePage = animeContentService.getAnimePage(pageNumber);
+        List<AnimeDTO> animePage = animeContentService.getAnimePage(pageNumber).stream().map(AnimeDTO::new).toList();
 
         return ResponseEntity.ok().headers(pageHeaders).body(animePage);
     }
@@ -35,7 +35,12 @@ public class AnimeController {
     public ResponseEntity<?> getCardPage(@RequestParam("page") int pageNumber) {
         long totalCount = animeContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, animeContentService.getPageSize(), totalCount);
-        List<ContentCardDTO<Anime>> cardsPage = animeContentService.getCardsPage(pageNumber);
+        List<ContentCardDTO<AnimeDTO>> cardsPage = animeContentService.getCardsPage(pageNumber).stream().map(x -> {
+            ContentCardDTO<AnimeDTO> card = new ContentCardDTO<>();
+            card.setContent(new AnimeDTO(x.getContent()));
+            card.setAvgRating(x.getAvgRating());
+            return card;
+        }).toList();
 
         return ResponseEntity.ok().headers(pageHeaders).body(cardsPage);
     }
@@ -46,7 +51,7 @@ public class AnimeController {
         if (byId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId);
+        return ResponseEntity.ok(new AnimeDTO(byId));
     }
 
     @GetMapping("/{id}/card")
@@ -55,28 +60,29 @@ public class AnimeController {
         if (byId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId);
+        ContentCardDTO<AnimeDTO> card = new ContentCardDTO<>();
+        card.setContent(new AnimeDTO(byId.getContent()));
+        card.setAvgRating(byId.getAvgRating());
+        return ResponseEntity.ok(card);
     }
 
-//    todo AUTH CHECK IMPL
-//------------------------------
-//
+
     @PostMapping(value = {"","/"})
     public ResponseEntity<?> create(@RequestBody @Validated AnimeDTO anime) {
         Anime resp = animeContentService.create(anime.toEntity());
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.status(201).body(new AnimeDTO(resp));
     }
 
     @PutMapping(value = {"","/"})
     public ResponseEntity<?> update(@RequestBody @Validated AnimeDTO anime) {
         Anime update = animeContentService.update(anime.toEntity());
-        return ResponseEntity.ok(update);
+        return ResponseEntity.status(201).body(new AnimeDTO(update));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         animeContentService.delete(id);
-        return ResponseEntity.ok("");
+        return ResponseEntity.status(204).build();
     }
 
 

@@ -31,8 +31,7 @@ public class ComicController {
     public ResponseEntity<?> getPage(@RequestParam("page") int pageNumber) {
         long totalCount = comicContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, comicContentService.getPageSize(), totalCount);
-        List<Comic> comicPage = comicContentService.getComicPage(pageNumber);
-
+        List<ComicDTO> comicPage = comicContentService.getComicPage(pageNumber).stream().map(ComicDTO::new).toList();
         return ResponseEntity.ok().headers(pageHeaders).body(comicPage);
     }
 
@@ -40,8 +39,12 @@ public class ComicController {
     public ResponseEntity<?> getCardPage(@RequestParam("page") int pageNumber) {
         long totalCount = comicContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, comicContentService.getPageSize(), totalCount);
-        List<ContentCardDTO<Comic>> cardsPage = comicContentService.getCardsPage(pageNumber);
-
+        List<ContentCardDTO<ComicDTO>> cardsPage = comicContentService.getCardsPage(pageNumber).stream().map(x -> {
+            ContentCardDTO<ComicDTO> card = new ContentCardDTO<>();
+            card.setContent(new ComicDTO(x.getContent()));
+            card.setAvgRating(x.getAvgRating());
+            return card;
+        }).toList();
         return ResponseEntity.ok().headers(pageHeaders).body(cardsPage);
     }
 
@@ -51,7 +54,7 @@ public class ComicController {
         if (byId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId);
+        return ResponseEntity.ok(new ComicDTO(byId));
     }
 
     @GetMapping("/{id}/card")
@@ -60,28 +63,30 @@ public class ComicController {
         if (byId == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId);
+
+        ContentCardDTO<ComicDTO> card = new ContentCardDTO<>();
+        card.setContent(new ComicDTO(byId.getContent()));
+        card.setAvgRating(byId.getAvgRating());
+        return ResponseEntity.ok(card);
     }
 
-//    todo AUTH CHECK IMPL
-//------------------------------
-//
+
     @PostMapping(value = {"","/"})
     public ResponseEntity<?> create(@RequestBody @Validated ComicDTO comicDTO) {
         Comic resp = comicContentService.create(comicDTO.toEntity());
-        return ResponseEntity.ok(resp);
+        return ResponseEntity.status(201).body(new ComicDTO(resp));
     }
 
     @PutMapping(value = {"","/"})
     public ResponseEntity<?> update(@RequestBody @Validated ComicDTO comicDTO) {
         Comic update = comicContentService.update(comicDTO.toEntity());
-        return ResponseEntity.ok(update);
+        return ResponseEntity.status(201).body(new ComicDTO(update));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         comicContentService.delete(id);
-        return ResponseEntity.ok("");
+        return ResponseEntity.status(204).build();
     }
 
 
