@@ -201,7 +201,7 @@ class TvShowControllerTest {
                 .when()
                 .post("/api/v1/content/tv-show")
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract().response();
 
         given()
@@ -233,7 +233,7 @@ class TvShowControllerTest {
                 .when()
                 .post("/api/v1/content/tv-show")
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract().response();
 
         Integer extractedId = response.path("id");
@@ -246,7 +246,7 @@ class TvShowControllerTest {
                 .when()
                 .put("/api/v1/content/tv-show")
                 .then()
-                .statusCode(200);
+                .statusCode(201);
 
         given()
                 .pathParam("id", response.path("id"))
@@ -277,7 +277,7 @@ class TvShowControllerTest {
                 .when()
                 .post("/api/v1/content/tv-show")
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract().response();
 
         given()
@@ -285,7 +285,7 @@ class TvShowControllerTest {
                 .when()
                 .delete("/api/v1/content/tv-show/{id}")
                 .then()
-                .statusCode(200);
+                .statusCode(204);
 
         given()
                 .pathParam("id", response.path("id"))
