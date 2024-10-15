@@ -7,6 +7,7 @@ import org.omega.omegapoisk.dto.tag.TagDTO;
 import org.omega.omegapoisk.entity.studio.Studio;
 import org.omega.omegapoisk.service.studio.StudioService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,8 +22,8 @@ public class StudioController {
     }
 
     @PostMapping(value = {"","/"})
-    public ResponseEntity<?> createStudio(@RequestBody Studio studio) {
-        Studio created = studioService.createStudio(studio);
+    public ResponseEntity<?> createStudio(@RequestBody @Validated StudioDTO studio) {
+        Studio created = studioService.createStudio(studio.toEntity());
         return ResponseEntity.status(201).body(new StudioDTO(created));
     }
 
