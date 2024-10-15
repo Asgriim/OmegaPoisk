@@ -1,7 +1,7 @@
 package org.omega.omegapoisk.dto.studio;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import org.omega.omegapoisk.entity.studio.Studio;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudioDTO {
-    @Positive(message = "Studio ID must be positive")
+    @PositiveOrZero(message = "Studio ID must be positive")
     private long id;
 
     @NotBlank(message = "Studio text cannot be blank")

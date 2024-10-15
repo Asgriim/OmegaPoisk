@@ -186,7 +186,6 @@ class GameControllerTest {
     void shouldCreate() {
         gameRepository.deleteAll();
 
-        int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
 
@@ -201,7 +200,7 @@ class GameControllerTest {
                 .when()
                 .post("/api/v1/content/game")
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract().response();
 
         given()
@@ -217,7 +216,6 @@ class GameControllerTest {
     void shouldUpdate() {
         gameRepository.deleteAll();
 
-        int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
         String changed = "Changed";
@@ -233,7 +231,7 @@ class GameControllerTest {
                 .when()
                 .post("/api/v1/content/game")
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract().response();
 
         Integer extractedId = response.path("id");
@@ -246,7 +244,7 @@ class GameControllerTest {
                 .when()
                 .put("/api/v1/content/game")
                 .then()
-                .statusCode(200);
+                .statusCode(201);
 
         given()
                 .pathParam("id", response.path("id"))
@@ -262,7 +260,6 @@ class GameControllerTest {
     void shouldDelete() {
         gameRepository.deleteAll();
 
-        int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
 
@@ -277,7 +274,7 @@ class GameControllerTest {
                 .when()
                 .post("/api/v1/content/game")
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .extract().response();
 
         given()
@@ -285,7 +282,7 @@ class GameControllerTest {
                 .when()
                 .delete("/api/v1/content/game/{id}")
                 .then()
-                .statusCode(200);
+                .statusCode(204);
 
         given()
                 .pathParam("id", response.path("id"))

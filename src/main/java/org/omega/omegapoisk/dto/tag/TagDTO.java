@@ -2,6 +2,7 @@ package org.omega.omegapoisk.dto.tag;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ import org.omega.omegapoisk.entity.tag.Tag;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TagDTO {
-    @Positive(message = "Tag ID must be positive")
+    @PositiveOrZero(message = "Tag ID must be positive")
     private long id;
 
     @NotBlank(message = "Tag text cannot be blank")
