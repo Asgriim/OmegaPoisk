@@ -3,9 +3,7 @@ package org.omega.omegapoisk.controller.content;
 
 import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.dto.content.MovieDTO;
-import org.omega.omegapoisk.dto.content.MovieDTO;
 import org.omega.omegapoisk.dto.content.ContentCardDTO;
-import org.omega.omegapoisk.entity.content.Movie;
 import org.omega.omegapoisk.entity.content.Movie;
 import org.omega.omegapoisk.service.content.MovieContentService;
 import org.omega.omegapoisk.utils.HeaderUtils;
@@ -24,8 +22,11 @@ public class MovieController {
     private final HeaderUtils headerUtils;
 
 
+    //todo rename all in content
+    //todo refactor page default param
+    // todo add feat page 2-5
     @GetMapping(value = {"","/"})
-    public ResponseEntity<?> getPage(@RequestParam("page") int pageNumber) {
+    public ResponseEntity<?> getMovies(@RequestParam("page") int pageNumber) {
         long totalCount = movieContentService.countAll();
         HttpHeaders pageHeaders = headerUtils.createPageHeaders(pageNumber, movieContentService.getPageSize(), totalCount);
         List<MovieDTO> moviePage = movieContentService.getMoviePage(pageNumber).stream().map(MovieDTO::new).toList();
@@ -68,7 +69,7 @@ public class MovieController {
         return ResponseEntity.ok(card);
     }
 
-
+    //todo refactor magic numbers
     @PostMapping(value = {"","/"})
     public ResponseEntity<?> create(@RequestBody @Validated MovieDTO MovieDTO) {
         Movie resp = movieContentService.create(MovieDTO.toEntity());

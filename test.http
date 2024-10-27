@@ -1,0 +1,69 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+
+POST localhost:8080/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "id": 0,
+  "login": "test",
+  "email": "email@a.ru",
+  "pass": "test",
+  "role": "admin"
+}
+
+###
+POST localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "id": 0,
+  "login": "test",
+  "email": "email@a.ru",
+  "pass": "test",
+  "role": "admin"
+}
+
+
+###
+GET localhost:8080/api/v1/content/movie/card
+
+###
+GET localhost:8080/api/v1/content/anime?page=0
+
+###
+GET localhost:8080/api/v1/content/rating/95/my-rating
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3Mjg5ODQwOTYsImV4cCI6MTcyOTA3MDQ5Niwic3ViIjoidGVzdCJ9.NJ5s0T-1kd09OhQoCGjPoJ8UUm_TgQtLQkgHaVmZNIStX9Y6wBOoMPtdJXuk7ulE7nsYpZ0Vg9XY0LLgBHNMlQ
+
+###
+POST localhost:8080/api/v1/content/rating
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3Mjg5ODQwOTYsImV4cCI6MTcyOTA3MDQ5Niwic3ViIjoidGVzdCJ9.NJ5s0T-1kd09OhQoCGjPoJ8UUm_TgQtLQkgHaVmZNIStX9Y6wBOoMPtdJXuk7ulE7nsYpZ0Vg9XY0LLgBHNMlQ
+
+
+{
+    "value": 2,
+    "content_id": 95
+}
+
+
+###
+POST localhost:8080/api/v1/content/review
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3Mjg5ODQwOTYsImV4cCI6MTcyOTA3MDQ5Niwic3ViIjoidGVzdCJ9.NJ5s0T-1kd09OhQoCGjPoJ8UUm_TgQtLQkgHaVmZNIStX9Y6wBOoMPtdJXuk7ulE7nsYpZ0Vg9XY0LLgBHNMlQ
+
+
+{
+        "txt": "govno",
+        "content_id": 95,
+        "user_id": 5
+}
+
+###
+GET localhost:8080/api/v1/content/review/95?page=0
+
+
+

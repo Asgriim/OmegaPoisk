@@ -17,9 +17,11 @@ import java.util.List;
 @Getter
 public class AnimeContentService  {
     private final AnimeRepository animeRepository;
+    //todo avgRating Service
     private final AvgRatingRepository avgRatingRepository;
     private final ContentService<Anime> contentService;
 
+    //todo rename PageSize to page
     @Value("${spring.application.page-size}")
     private int pageSize;
 
@@ -33,6 +35,7 @@ public class AnimeContentService  {
         return animeRepository.findById(id).orElse(null);
     }
 
+    //todo no DTO
     public ContentCardDTO<Anime> getContentCardById(Long id) {
         return contentService.getCardById(id);
     }
