@@ -4,12 +4,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omega.omegapoisk.entity.user.RoleEntity;
-import org.omega.omegapoisk.entity.user.User;
+import org.omega.omegapoisk.user.entity.RoleEntity;
+import org.omega.omegapoisk.user.entity.User;
 import org.omega.omegapoisk.exception.InvaliUserOrPasswordException;
 import org.omega.omegapoisk.exception.UserAlreadyExistsException;
-import org.omega.omegapoisk.repository.user.RoleRepository;
-import org.omega.omegapoisk.repository.user.UserRepository;
+import org.omega.omegapoisk.user.repository.RoleRepository;
+import org.omega.omegapoisk.user.repository.UserRepository;
+import org.omega.omegapoisk.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +22,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.omega.omegapoisk.entity.user.Role.USER;
 
 @SpringBootTest
 @Testcontainers

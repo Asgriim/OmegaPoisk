@@ -4,13 +4,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omega.omegapoisk.entity.content.Anime;
-import org.omega.omegapoisk.entity.studio.Studio;
-import org.omega.omegapoisk.repository.content.AnimeRepository;
-import org.omega.omegapoisk.repository.studio.StudioRepository;
-import org.omega.omegapoisk.repository.studio.StudioRepository;
-import org.omega.omegapoisk.service.content.AnimeContentService;
-import org.omega.omegapoisk.service.studio.StudioService;
+import org.omega.omegapoisk.content.entity.Anime;
+import org.omega.omegapoisk.studio.entity.Studio;
+import org.omega.omegapoisk.content.repository.AnimeRepository;
+import org.omega.omegapoisk.studio.repository.StudioRepository;
+import org.omega.omegapoisk.content.service.AnimeContentService;
+import org.omega.omegapoisk.studio.service.StudioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +22,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
