@@ -21,7 +21,7 @@ public class MovieContentService extends AbstractContentService<Movie> {
     private final AvgRatingService avgRatingService;
 
     @Value("${spring.application.page}")
-    private int page;
+    private long page;
 
     public MovieContentService(MovieRepository movieRepository, AvgRatingService avgRatingService) {
         super(movieRepository, avgRatingService);

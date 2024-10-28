@@ -20,9 +20,8 @@ public class TvShowContentService extends AbstractContentService<TvShow> {
     private final TvShowRepository tvShowRepository;
     private final AvgRatingService avgRatingService;
 
-
     @Value("${spring.application.page}")
-    private int page;
+    private long page;
 
     public TvShowContentService(TvShowRepository tvShowRepository, AvgRatingService avgRatingService) {
         super(tvShowRepository, avgRatingService);

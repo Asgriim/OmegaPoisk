@@ -8,8 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Table("user_")
-public class User implements UserDetails {
+public class User  {
     @Id
     private long id;
     private String login;
@@ -32,18 +30,4 @@ public class User implements UserDetails {
     @Transient
     private RoleEntity role;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(role.getRole());
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return login;
-    }
 }

@@ -7,7 +7,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,11 +31,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvaliUserOrPasswordException.class)
     public ResponseEntity<?> handleIUOPE() {
         return ResponseEntity.badRequest().body("Invalid user or password");
-    }
-
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<?> handleUNFE(UsernameNotFoundException exception, WebRequest request) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
     @ExceptionHandler(ClassCastException.class)

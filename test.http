@@ -1,8 +1,3 @@
-### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=IntelliJ IDEA
-
-###
 
 POST localhost:8080/api/v1/auth/register
 Content-Type: application/json
@@ -35,6 +30,12 @@ GET localhost:8080/api/v1/content/movie/card
 GET localhost:8080/api/v1/content/anime?page=0
 
 ###
+GET localhost:8080/api/v1/content/anime?page=0&page-to=1
+
+###
+GET localhost:8080/api/v1/content/anime
+
+###
 GET localhost:8080/api/v1/content/rating/95/my-rating
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3Mjg5ODQwOTYsImV4cCI6MTcyOTA3MDQ5Niwic3ViIjoidGVzdCJ9.NJ5s0T-1kd09OhQoCGjPoJ8UUm_TgQtLQkgHaVmZNIStX9Y6wBOoMPtdJXuk7ulE7nsYpZ0Vg9XY0LLgBHNMlQ
 
@@ -65,5 +66,6 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3Mjg5ODQwOTYsImV4cCI6MTcyO
 ###
 GET localhost:8080/api/v1/content/review/95?page=0
 
-
+###
+GET localhost:8080/api/v1/test/test2
 

@@ -19,11 +19,11 @@ import java.util.List;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
 
-    @Value("${spring.application.page-size}")
-    private int pageSize;
+    @Value("${spring.application.page}")
+    private int page;
 
     public List<Review> getPageByContentId(final Long contentId,int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber, page);
         return reviewRepository.findByContentId(contentId, pageable).stream().toList();
     }
 

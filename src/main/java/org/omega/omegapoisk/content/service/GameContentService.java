@@ -22,8 +22,7 @@ public class GameContentService extends AbstractContentService<Game>{
     private final AvgRatingService avgRatingService;
 
     @Value("${spring.application.page}")
-    private int page;
-
+    private long page;
 
     public GameContentService(AvgRatingService avgRatingService, GameRepository gameRepository) {
         super(gameRepository, avgRatingService);

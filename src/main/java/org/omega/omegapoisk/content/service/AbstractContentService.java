@@ -6,8 +6,6 @@ import org.omega.omegapoisk.content.entity.ContentCard;
 import org.omega.omegapoisk.content.repository.BaseContentPagingRepository;
 import org.omega.omegapoisk.rating.entity.AvgRating;
 import org.omega.omegapoisk.rating.service.AvgRatingService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,44 +44,49 @@ public abstract class AbstractContentService <T extends Content> {
         return contentRepository.findRangeWithLimitOffset(limit, offset);
     }
 
-    public T getContentById(Long id) {
+    public T getById(Long id) {
         return contentRepository.findById(id).orElse(null);
     }
 
     @Transactional
-    public T createContent(T content) {
+    public T create(T content) {
         content.setId(contentRepository.getNextContentId());
         content.setNew(true);
         return contentRepository.save(content);
     }
 
     @Transactional
-    public T updateContent(T content) {
+    public T update(T content) {
         content.setNew(false);
         return contentRepository.save(content);
     }
 
     @Transactional
     public void delete(T content) {
-        contentRepository.deleteById(content.getId());
+        delete(content.getId());
+    }
+
+    @Transactional
+    public void delete(Long contentId) {
+        contentRepository.deleteById(contentId);
     }
 
     public long count() {
         return contentRepository.count();
     }
 
-    public List<ContentCard<T>> getContentCardPage(Pageable pageable) {
+    public List<ContentCard<T>> getCardPage(Pageable pageable) {
         return createCardList(getContentPage(pageable));
     }
 
-    private List<ContentCard<T>> getContentCardPageRange(Pageable pageableFrom, Pageable pageableTo) {
+    public List<ContentCard<T>> getCardPageRange(Pageable pageableFrom, Pageable pageableTo) {
         return createCardList(getContentPageRange(pageableFrom, pageableTo));
     }
 
-    public ContentCard<T> getContentCardById(Long id) {
+    public ContentCard<T> getCardById(Long id) {
         return createCard(contentRepository.findById(id).orElse(null));
     }
 
-
+    public abstract long getPage();
 }
 

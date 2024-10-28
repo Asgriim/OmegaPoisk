@@ -10,5 +10,5 @@ import org.omega.omegapoisk.rating.dto.AvgRatingDTO;
 @NoArgsConstructor
 public class ContentCardDTO <T extends ContentDTO> {
     private T content;
-    private double avgRating;
+    private double avgRating = 0;
 }

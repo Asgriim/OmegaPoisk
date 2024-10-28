@@ -22,7 +22,7 @@ public class ComicContentService extends AbstractContentService<Comic> {
     private final AvgRatingService avgRatingService;
 
     @Value("${spring.application.page}")
-    private int page;
+    private long page;
 
     public ComicContentService(ComicRepository comicRepository, AvgRatingService avgRatingService) {
         super(comicRepository, avgRatingService);

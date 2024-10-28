@@ -6,14 +6,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 
-@Component
 @NoArgsConstructor
 public class HeaderUtils {
 
-    public HttpHeaders createPageHeaders(int pageNumber, int pageSize, long totalCount) {
+    public static HttpHeaders createPageHeaders(Pageable pageable, long totalCount) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Page-Size", String.valueOf(pageSize));
-        httpHeaders.add("Page-Number", String.valueOf(pageNumber));
+        httpHeaders.add("Page-Size", String.valueOf(pageable.getPageSize()));
+        httpHeaders.add("Page-Number", String.valueOf(pageable.getPageNumber()));
         httpHeaders.add("Total-Count", String.valueOf(totalCount));
         return httpHeaders;
     }
