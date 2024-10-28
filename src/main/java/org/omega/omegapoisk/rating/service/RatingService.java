@@ -12,11 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RatingService {
     private final RatingRepository ratingRepository;
-    private final AvgRatingRepository avgRatingRepository;
-
-    public AvgRating getAvgRatingByContentId(final long contentId) {
-        return avgRatingRepository.findByContentId(contentId).orElse(null);
-    }
 
     public Rating findByUserAndContentId(final int contentId, final int userId) {
         return ratingRepository.findByContentIdAndUserId(contentId, userId);
