@@ -1,7 +1,7 @@
 spring:
   application:
     name: OmegaPoisk
-    page-size: ${SPRING_PAGE_SIZE}
+    page: ${SPRING_PAGE}
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
@@ -11,8 +11,6 @@ spring:
     enabled: ${SPRING_FLYWAY_ENABLED:true}
   jackson:
     property-naming-strategy: SNAKE_CASE
-jwt:
-  secret: ${JWT_SECRET}
 server:
   servlet:
     context-path: ${API_PREFIX}
