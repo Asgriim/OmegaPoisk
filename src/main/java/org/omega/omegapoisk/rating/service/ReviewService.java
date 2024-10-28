@@ -22,8 +22,7 @@ public class ReviewService {
     @Value("${spring.application.page}")
     private int page;
 
-    public List<Review> getPageByContentId(final Long contentId,int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, page);
+    public List<Review> getPageByContentId(Pageable pageable, long contentId) {
         return reviewRepository.findByContentId(contentId, pageable).stream().toList();
     }
 

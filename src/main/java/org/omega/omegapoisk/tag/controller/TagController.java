@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.omega.omegapoisk.tag.dto.TagDTO;
 import org.omega.omegapoisk.tag.entity.Tag;
 import org.omega.omegapoisk.tag.service.TagService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,25 +32,25 @@ public class TagController {
     @PostMapping(value = {"","/"})
     public ResponseEntity<?> createTag(@RequestBody @Validated TagDTO tag) {
         Tag created = tagService.create(tag.toEntity());
-        return ResponseEntity.status(201).body(new TagDTO(created));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TagDTO(created));
     }
 
     @PostMapping("/{id}/content/{contId}")
     public ResponseEntity<?> addContentTag(@PathVariable("id") long id, @PathVariable("contId") long contId) {
         tagService.addTagToContent(contId, id);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTag(@PathVariable("id") long id) {
         tagService.delete(id);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{id}/content/{contId}")
     public ResponseEntity<?> deleteContentTag(@PathVariable("id") long id, @PathVariable("contId") long contId) {
         tagService.deleteByContentId(contId, id);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

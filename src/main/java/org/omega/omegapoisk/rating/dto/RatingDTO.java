@@ -19,9 +19,14 @@ public class RatingDTO {
     @Positive(message = "Content ID must be positive")
     private int contentId;
 
+    @NotNull(message = "User Id cannot be null")
+    @Positive(message = "User Id must be positive")
+    private int userId;
+
     public RatingDTO(Rating rating) {
         this.value = rating.getValue();
         this.contentId = rating.getContentId();
+        this.userId = rating.getUserId();
     }
 
 
@@ -29,6 +34,7 @@ public class RatingDTO {
         Rating rating = new Rating();
         rating.setValue(this.value);
         rating.setContentId(this.contentId);
+        rating.setUserId(this.userId);
         return rating;
     }
 }

@@ -18,6 +18,8 @@ public class ReviewDTO {
     @Positive(message = "Content ID must be positive")
     private int contentId;
 
+    @NotNull(message = "User Id cannot be null")
+    @Positive(message = "User Id must be positive")
     private int userID;
 
     public ReviewDTO(Review review) {

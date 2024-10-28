@@ -5,9 +5,11 @@ import org.omega.omegapoisk.rating.dto.AvgRatingDTO;
 import org.omega.omegapoisk.rating.dto.RatingDTO;
 import org.omega.omegapoisk.rating.entity.AvgRating;
 import org.omega.omegapoisk.rating.entity.Rating;
+import org.omega.omegapoisk.rating.service.AvgRatingService;
 import org.omega.omegapoisk.user.entity.User;
 import org.omega.omegapoisk.user.service.UserService;
 import org.omega.omegapoisk.rating.service.RatingService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,50 +18,34 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/content/rating")
 @RequiredArgsConstructor
 public class RatingController {
-//    private final RatingService ratingService;
-//    private final UserService userService;
+    private final RatingService ratingService;
+    private final AvgRatingService avgRatingService;
 
-//    @GetMapping("/{id}/avg")
-//    public ResponseEntity<?> getAvgById(@PathVariable int id) {
-//        AvgRating avgRating = ratingService.getAvgRatingByContentId(id);
-//
-//        return ResponseEntity.ok(new AvgRatingDTO(avgRating));
-//    }
-//
-//    @GetMapping("/{id}/my-rating")
-//    public ResponseEntity<?> getMyRating(@PathVariable int id) {
-//        User userFromContext = userService.getUserFromContext();
-//        Rating rating = ratingService.findByUserAndContentId(id, (int) userFromContext.getId());
-//        if (rating == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(new RatingDTO(rating));
-//    }
-//
-//    @DeleteMapping("/{id}/my-rating")
-//    public ResponseEntity<?> deleteMy(@PathVariable int id) {
-//        User userFromContext = userService.getUserFromContext();
-//        Rating rating = ratingService.findByUserAndContentId(id, (int) userFromContext.getId());
-//        ratingService.delete(rating.getId());
-//        return ResponseEntity.status(204).build();
-//    }
-//
-//    @PostMapping(value = {"","/"})
-//    public ResponseEntity<?> createRating(@RequestBody @Validated RatingDTO ratingDTO) {
-//            User userFromContext = userService.getUserFromContext();
-//            Rating entity = ratingDTO.toEntity();
-//            entity.setUserId((int) userFromContext.getId());
-//            return ResponseEntity.status(201).body(new RatingDTO(ratingService.create(entity)));
-//    }
-//
-//    @PutMapping(value = {"","/"})
-//    public ResponseEntity<?> updateRating(@RequestBody @Validated RatingDTO ratingDTO) {
-//        User userFromContext = userService.getUserFromContext();
-//        Rating entity = ratingDTO.toEntity();
-//        entity.setUserId((int) userFromContext.getId());
-//        return ResponseEntity.status(201).body(new RatingDTO(ratingService.update(entity)));
-//    }
+    @GetMapping("/{id}/avg")
+    public ResponseEntity<?> getAvgById(@PathVariable int id) {
+        AvgRating avgRating = avgRatingService.getAvgRatingByContentId(id);
 
+        return ResponseEntity.ok(new AvgRatingDTO(avgRating));
+    }
 
+    @PostMapping(value = {"","/"})
+    public ResponseEntity<?> create(@RequestBody @Validated RatingDTO ratingDTO) {
+        Rating entity = ratingDTO.toEntity();
+        Rating created = ratingService.create(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new RatingDTO(created));
+    }
+
+    @PutMapping(value = {"","/"})
+    public ResponseEntity<?> update(@RequestBody @Validated RatingDTO ratingDTO) {
+        Rating entity = ratingDTO.toEntity();
+        Rating created = ratingService.update(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new RatingDTO(created));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable int id) {
+        ratingService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 }
