@@ -1,7 +1,7 @@
 spring:
   application:
     name: OmegaPoisk
-    page-size: 5
+    page: 5
   datasource:
     driver-class-name: org.postgresql.Driver
   flyway:

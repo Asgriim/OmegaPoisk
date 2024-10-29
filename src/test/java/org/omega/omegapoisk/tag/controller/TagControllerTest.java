@@ -1,4 +1,4 @@
-package org.omega.omegapoisk.controller.tag;
+package org.omega.omegapoisk.tag.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +50,7 @@ class TagControllerTest {
     @Autowired
     AnimeRepository animeRepository;
 
-    @Value("${spring.application.page-size}")
+    @Value("${spring.application.page}")
     int pageSize;
 
     static Anime anime;

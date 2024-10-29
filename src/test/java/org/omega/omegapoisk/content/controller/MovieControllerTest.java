@@ -1,4 +1,4 @@
-package org.omega.omegapoisk.controller.content;
+package org.omega.omegapoisk.content.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,10 +10,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omega.omegapoisk.content.dto.ComicDTO;
-import org.omega.omegapoisk.content.entity.Comic;
-import org.omega.omegapoisk.content.repository.ComicRepository;
-import org.omega.omegapoisk.content.service.ComicContentService;
+import org.omega.omegapoisk.content.dto.MovieDTO;
+import org.omega.omegapoisk.content.entity.Movie;
+import org.omega.omegapoisk.content.repository.MovieRepository;
+import org.omega.omegapoisk.content.service.MovieContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ComicControllerTest {
+class MovieControllerTest {
     @LocalServerPort
     private Integer port;
 
@@ -37,15 +37,15 @@ class ComicControllerTest {
     );
 
     @Autowired
-    ComicContentService comicContentService;
+    MovieContentService movieContentService;
 
     @Autowired
-    ComicRepository comicRepository;
+    MovieRepository movieRepository;
 
-    @Value("${spring.application.page-size}")
+    @Value("${spring.application.page}")
     int pageSize;
 
-    static Comic comic;
+    static Movie movie;
 
     @BeforeAll
     static void beforeAll() {
@@ -70,10 +70,10 @@ class ComicControllerTest {
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
 
-        comicRepository.deleteAll();
-        comic = comicContentService.create(new Comic(true, 13));
-        comic.setTitle("86");
-        comic.setDescription("Robots.txt");
+        movieRepository.deleteAll();
+        movie = movieContentService.create(new Movie(13));
+        movie.setTitle("86");
+        movie.setDescription("Robots.txt");
 
     }
 
@@ -89,10 +89,10 @@ class ComicControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/comic/" + comic.getId())
+                .get("/api/v1/content/movie/" + movie.getId())
                 .then()
                 .statusCode(200)
-                .body("chapters_count", equalTo(comic.getChaptersCount()));
+                .body("duration", equalTo(movie.getDuration()));
     }
 
     @Test
@@ -100,23 +100,23 @@ class ComicControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/comic/" + comic.getId() + "/card")
+                .get("/api/v1/content/movie/" + movie.getId() + "/card")
                 .then()
                 .statusCode(200)
-                .body("content.chapters_count", equalTo(comic.getChaptersCount()));
+                .body("content.duration", equalTo(movie.getDuration()));
     }
 
     @Test
     void shouldGetPage() {
-        comicRepository.deleteAll();
+        movieRepository.deleteAll();
         for (int i = 0; i < pageSize*2+2; i++) {
-            comicContentService.create(new Comic(true, 13));
+            movieContentService.create(new Movie(13));
         }
 
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/comic?page=0")
+                .get("/api/v1/content/movie?page=0")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
@@ -124,21 +124,21 @@ class ComicControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/comic?page=1")
+                .get("/api/v1/content/movie?page=1")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/comic?page=2")
+                .get("/api/v1/content/movie?page=2")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(2));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/comic?page=3")
+                .get("/api/v1/content/movie?page=3")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
@@ -146,15 +146,15 @@ class ComicControllerTest {
 
     @Test
     void shouldGetCardPage() {
-        comicRepository.deleteAll();
+        movieRepository.deleteAll();
         for (int i = 0; i < pageSize*2+2; i++) {
-            comicContentService.create(new Comic(true, 13));
+            movieContentService.create(new Movie(13));
         }
 
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/comic/card?page=0")
+                .get("/api/v1/content/movie/card?page=0")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
@@ -162,21 +162,21 @@ class ComicControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/comic/card?page=1")
+                .get("/api/v1/content/movie/card?page=1")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/comic/card?page=2")
+                .get("/api/v1/content/movie/card?page=2")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(2));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/comic/card?page=3")
+                .get("/api/v1/content/movie/card?page=3")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
@@ -184,22 +184,22 @@ class ComicControllerTest {
 
     @Test
     void shouldCreate() {
-        comicRepository.deleteAll();
+        movieRepository.deleteAll();
 
         int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
 
-        Comic comic1 = new Comic(true, seriesNum);
-        comic1.setId(1L);
-        comic1.setTitle(title);
-        comic1.setDescription(desc);
+        Movie movie1 = new Movie(seriesNum);
+        movie1.setId(1L);
+        movie1.setTitle(title);
+        movie1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new ComicDTO(comic1))
+                .body(new MovieDTO(movie1))
                 .when()
-                .post("/api/v1/content/comic")
+                .post("/api/v1/content/movie")
                 .then()
                 .statusCode(201)
                 .extract().response();
@@ -207,7 +207,7 @@ class ComicControllerTest {
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/comic/{id}")
+                .get("/api/v1/content/movie/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", equalTo(response.path("id")));
@@ -215,43 +215,43 @@ class ComicControllerTest {
 
     @Test
     void shouldUpdate() {
-        comicRepository.deleteAll();
+        movieRepository.deleteAll();
 
         int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
         String changed = "Changed";
 
-        Comic comic1 = new Comic(true, seriesNum);
-        comic1.setId(1L);
-        comic1.setTitle(title);
-        comic1.setDescription(desc);
+        Movie movie1 = new Movie(seriesNum);
+        movie1.setId(1L);
+        movie1.setTitle(title);
+        movie1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new ComicDTO(comic1))
+                .body(new MovieDTO(movie1))
                 .when()
-                .post("/api/v1/content/comic")
+                .post("/api/v1/content/movie")
                 .then()
                 .statusCode(201)
                 .extract().response();
 
         Integer extractedId = response.path("id");
-        comic1.setId(extractedId.longValue());
-        comic1.setTitle(changed);
+        movie1.setId(extractedId.longValue());
+        movie1.setTitle(changed);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(new ComicDTO(comic1))
+                .body(new MovieDTO(movie1))
                 .when()
-                .put("/api/v1/content/comic")
+                .put("/api/v1/content/movie")
                 .then()
                 .statusCode(201);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/comic/{id}")
+                .get("/api/v1/content/movie/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", equalTo(response.path("id")))
@@ -260,22 +260,22 @@ class ComicControllerTest {
 
     @Test
     void shouldDelete() {
-        comicRepository.deleteAll();
+        movieRepository.deleteAll();
 
         int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
 
-        Comic comic1 = new Comic(true, seriesNum);
-        comic1.setId(1L);
-        comic1.setTitle(title);
-        comic1.setDescription(desc);
+        Movie movie1 = new Movie(seriesNum);
+        movie1.setId(1L);
+        movie1.setTitle(title);
+        movie1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new ComicDTO(comic1))
+                .body(new MovieDTO(movie1))
                 .when()
-                .post("/api/v1/content/comic")
+                .post("/api/v1/content/movie")
                 .then()
                 .statusCode(201)
                 .extract().response();
@@ -283,21 +283,21 @@ class ComicControllerTest {
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .delete("/api/v1/content/comic/{id}")
+                .delete("/api/v1/content/movie/{id}")
                 .then()
                 .statusCode(204);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/comic/{id}")
+                .get("/api/v1/content/movie/{id}")
                 .then()
                 .statusCode(404);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/comic/{id}/card")
+                .get("/api/v1/content/movie/{id}/card")
                 .then()
                 .statusCode(404);
     }

@@ -1,4 +1,4 @@
-package org.omega.omegapoisk.service;
+package org.omega.omegapoisk.user.service;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,7 +40,7 @@ class UserServiceTest {
     @Autowired
     RoleRepository roleRepository;
 
-    @Value("${spring.application.page-size}")
+    @Value("${spring.application.page}")
     int pageSize;
 
 

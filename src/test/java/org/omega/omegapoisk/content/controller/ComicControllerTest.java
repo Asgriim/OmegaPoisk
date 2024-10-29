@@ -1,4 +1,4 @@
-package org.omega.omegapoisk.controller.content;
+package org.omega.omegapoisk.content.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,10 +10,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omega.omegapoisk.content.dto.TvShowDTO;
-import org.omega.omegapoisk.content.entity.TvShow;
-import org.omega.omegapoisk.content.repository.TvShowRepository;
-import org.omega.omegapoisk.content.service.TvShowContentService;
+import org.omega.omegapoisk.content.dto.ComicDTO;
+import org.omega.omegapoisk.content.entity.Comic;
+import org.omega.omegapoisk.content.repository.ComicRepository;
+import org.omega.omegapoisk.content.service.ComicContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TvShowControllerTest {
+class ComicControllerTest {
     @LocalServerPort
     private Integer port;
 
@@ -37,15 +37,15 @@ class TvShowControllerTest {
     );
 
     @Autowired
-    TvShowContentService tvShowContentService;
+    ComicContentService comicContentService;
 
     @Autowired
-    TvShowRepository tvShowRepository;
+    ComicRepository comicRepository;
 
-    @Value("${spring.application.page-size}")
+    @Value("${spring.application.page}")
     int pageSize;
 
-    static TvShow tvShow;
+    static Comic comic;
 
     @BeforeAll
     static void beforeAll() {
@@ -70,10 +70,10 @@ class TvShowControllerTest {
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
 
-        tvShowRepository.deleteAll();
-        tvShow = tvShowContentService.create(new TvShow(13));
-        tvShow.setTitle("86");
-        tvShow.setDescription("Robots.txt");
+        comicRepository.deleteAll();
+        comic = comicContentService.create(new Comic(true, 13));
+        comic.setTitle("86");
+        comic.setDescription("Robots.txt");
 
     }
 
@@ -89,10 +89,10 @@ class TvShowControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/tv-show/" + tvShow.getId())
+                .get("/api/v1/content/comic/" + comic.getId())
                 .then()
                 .statusCode(200)
-                .body("series_num", equalTo(tvShow.getSeriesNum()));
+                .body("chapters_count", equalTo(comic.getChaptersCount()));
     }
 
     @Test
@@ -100,23 +100,23 @@ class TvShowControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/tv-show/" + tvShow.getId() + "/card")
+                .get("/api/v1/content/comic/" + comic.getId() + "/card")
                 .then()
                 .statusCode(200)
-                .body("content.series_num", equalTo(tvShow.getSeriesNum()));
+                .body("content.chapters_count", equalTo(comic.getChaptersCount()));
     }
 
     @Test
     void shouldGetPage() {
-        tvShowRepository.deleteAll();
+        comicRepository.deleteAll();
         for (int i = 0; i < pageSize*2+2; i++) {
-            tvShowContentService.create(new TvShow(13));
+            comicContentService.create(new Comic(true, 13));
         }
 
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/tv-show?page=0")
+                .get("/api/v1/content/comic?page=0")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
@@ -124,21 +124,21 @@ class TvShowControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/tv-show?page=1")
+                .get("/api/v1/content/comic?page=1")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/tv-show?page=2")
+                .get("/api/v1/content/comic?page=2")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(2));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/tv-show?page=3")
+                .get("/api/v1/content/comic?page=3")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
@@ -146,15 +146,15 @@ class TvShowControllerTest {
 
     @Test
     void shouldGetCardPage() {
-        tvShowRepository.deleteAll();
+        comicRepository.deleteAll();
         for (int i = 0; i < pageSize*2+2; i++) {
-            tvShowContentService.create(new TvShow(13));
+            comicContentService.create(new Comic(true, 13));
         }
 
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/tv-show/card?page=0")
+                .get("/api/v1/content/comic/card?page=0")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
@@ -162,21 +162,21 @@ class TvShowControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/tv-show/card?page=1")
+                .get("/api/v1/content/comic/card?page=1")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/tv-show/card?page=2")
+                .get("/api/v1/content/comic/card?page=2")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(2));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/tv-show/card?page=3")
+                .get("/api/v1/content/comic/card?page=3")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
@@ -184,22 +184,22 @@ class TvShowControllerTest {
 
     @Test
     void shouldCreate() {
-        tvShowRepository.deleteAll();
+        comicRepository.deleteAll();
 
         int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
 
-        TvShow tvShow1 = new TvShow(seriesNum);
-        tvShow1.setId(1L);
-        tvShow1.setTitle(title);
-        tvShow1.setDescription(desc);
+        Comic comic1 = new Comic(true, seriesNum);
+        comic1.setId(1L);
+        comic1.setTitle(title);
+        comic1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new TvShowDTO(tvShow1))
+                .body(new ComicDTO(comic1))
                 .when()
-                .post("/api/v1/content/tv-show")
+                .post("/api/v1/content/comic")
                 .then()
                 .statusCode(201)
                 .extract().response();
@@ -207,7 +207,7 @@ class TvShowControllerTest {
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/tv-show/{id}")
+                .get("/api/v1/content/comic/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", equalTo(response.path("id")));
@@ -215,43 +215,43 @@ class TvShowControllerTest {
 
     @Test
     void shouldUpdate() {
-        tvShowRepository.deleteAll();
+        comicRepository.deleteAll();
 
         int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
         String changed = "Changed";
 
-        TvShow tvShow1 = new TvShow(seriesNum);
-        tvShow1.setId(1L);
-        tvShow1.setTitle(title);
-        tvShow1.setDescription(desc);
+        Comic comic1 = new Comic(true, seriesNum);
+        comic1.setId(1L);
+        comic1.setTitle(title);
+        comic1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new TvShowDTO(tvShow1))
+                .body(new ComicDTO(comic1))
                 .when()
-                .post("/api/v1/content/tv-show")
+                .post("/api/v1/content/comic")
                 .then()
                 .statusCode(201)
                 .extract().response();
 
         Integer extractedId = response.path("id");
-        tvShow1.setId(extractedId.longValue());
-        tvShow1.setTitle(changed);
+        comic1.setId(extractedId.longValue());
+        comic1.setTitle(changed);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(new TvShowDTO(tvShow1))
+                .body(new ComicDTO(comic1))
                 .when()
-                .put("/api/v1/content/tv-show")
+                .put("/api/v1/content/comic")
                 .then()
                 .statusCode(201);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/tv-show/{id}")
+                .get("/api/v1/content/comic/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", equalTo(response.path("id")))
@@ -260,22 +260,22 @@ class TvShowControllerTest {
 
     @Test
     void shouldDelete() {
-        tvShowRepository.deleteAll();
+        comicRepository.deleteAll();
 
         int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
 
-        TvShow tvShow1 = new TvShow(seriesNum);
-        tvShow1.setId(1L);
-        tvShow1.setTitle(title);
-        tvShow1.setDescription(desc);
+        Comic comic1 = new Comic(true, seriesNum);
+        comic1.setId(1L);
+        comic1.setTitle(title);
+        comic1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new TvShowDTO(tvShow1))
+                .body(new ComicDTO(comic1))
                 .when()
-                .post("/api/v1/content/tv-show")
+                .post("/api/v1/content/comic")
                 .then()
                 .statusCode(201)
                 .extract().response();
@@ -283,21 +283,21 @@ class TvShowControllerTest {
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .delete("/api/v1/content/tv-show/{id}")
+                .delete("/api/v1/content/comic/{id}")
                 .then()
                 .statusCode(204);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/tv-show/{id}")
+                .get("/api/v1/content/comic/{id}")
                 .then()
                 .statusCode(404);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/tv-show/{id}/card")
+                .get("/api/v1/content/comic/{id}/card")
                 .then()
                 .statusCode(404);
     }

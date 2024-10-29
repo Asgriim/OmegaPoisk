@@ -1,4 +1,4 @@
-package org.omega.omegapoisk.controller.studio;
+package org.omega.omegapoisk.studio.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +50,7 @@ class StudioControllerTest {
     @Autowired
     AnimeRepository animeRepository;
 
-    @Value("${spring.application.page-size}")
+    @Value("${spring.application.page}")
     int pageSize;
 
     static Anime anime;

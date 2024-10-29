@@ -1,4 +1,4 @@
-package org.omega.omegapoisk.controller.content;
+package org.omega.omegapoisk.content.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,10 +10,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.omega.omegapoisk.content.dto.GameDTO;
-import org.omega.omegapoisk.content.entity.Game;
-import org.omega.omegapoisk.content.repository.GameRepository;
-import org.omega.omegapoisk.content.service.GameContentService;
+import org.omega.omegapoisk.content.dto.TvShowDTO;
+import org.omega.omegapoisk.content.entity.TvShow;
+import org.omega.omegapoisk.content.repository.TvShowRepository;
+import org.omega.omegapoisk.content.service.TvShowContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class GameControllerTest {
+class TvShowControllerTest {
     @LocalServerPort
     private Integer port;
 
@@ -37,15 +37,15 @@ class GameControllerTest {
     );
 
     @Autowired
-    GameContentService gameContentService;
+    TvShowContentService tvShowContentService;
 
     @Autowired
-    GameRepository gameRepository;
+    TvShowRepository tvShowRepository;
 
-    @Value("${spring.application.page-size}")
+    @Value("${spring.application.page}")
     int pageSize;
 
-    static Game game;
+    static TvShow tvShow;
 
     @BeforeAll
     static void beforeAll() {
@@ -70,10 +70,10 @@ class GameControllerTest {
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
 
-        gameRepository.deleteAll();
-        game = gameContentService.create(new Game(false));
-        game.setTitle("86");
-        game.setDescription("Robots.txt");
+        tvShowRepository.deleteAll();
+        tvShow = tvShowContentService.create(new TvShow(13));
+        tvShow.setTitle("86");
+        tvShow.setDescription("Robots.txt");
 
     }
 
@@ -89,10 +89,10 @@ class GameControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/game/" + game.getId())
+                .get("/api/v1/content/tv-show/" + tvShow.getId())
                 .then()
                 .statusCode(200)
-                .body("free", equalTo(game.isFree()));
+                .body("series_num", equalTo(tvShow.getSeriesNum()));
     }
 
     @Test
@@ -100,23 +100,23 @@ class GameControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/game/" + game.getId() + "/card")
+                .get("/api/v1/content/tv-show/" + tvShow.getId() + "/card")
                 .then()
                 .statusCode(200)
-                .body("content.free", equalTo(game.isFree()));
+                .body("content.series_num", equalTo(tvShow.getSeriesNum()));
     }
 
     @Test
     void shouldGetPage() {
-        gameRepository.deleteAll();
+        tvShowRepository.deleteAll();
         for (int i = 0; i < pageSize*2+2; i++) {
-            gameContentService.create(new Game(false));
+            tvShowContentService.create(new TvShow(13));
         }
 
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/game?page=0")
+                .get("/api/v1/content/tv-show?page=0")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
@@ -124,21 +124,21 @@ class GameControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/game?page=1")
+                .get("/api/v1/content/tv-show?page=1")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/game?page=2")
+                .get("/api/v1/content/tv-show?page=2")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(2));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/game?page=3")
+                .get("/api/v1/content/tv-show?page=3")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
@@ -146,15 +146,15 @@ class GameControllerTest {
 
     @Test
     void shouldGetCardPage() {
-        gameRepository.deleteAll();
+        tvShowRepository.deleteAll();
         for (int i = 0; i < pageSize*2+2; i++) {
-            gameContentService.create(new Game(false));
+            tvShowContentService.create(new TvShow(13));
         }
 
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/game/card?page=0")
+                .get("/api/v1/content/tv-show/card?page=0")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
@@ -162,21 +162,21 @@ class GameControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/game/card?page=1")
+                .get("/api/v1/content/tv-show/card?page=1")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(pageSize));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/game/card?page=2")
+                .get("/api/v1/content/tv-show/card?page=2")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(2));
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/v1/content/game/card?page=3")
+                .get("/api/v1/content/tv-show/card?page=3")
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
@@ -184,21 +184,22 @@ class GameControllerTest {
 
     @Test
     void shouldCreate() {
-        gameRepository.deleteAll();
+        tvShowRepository.deleteAll();
 
+        int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
 
-        Game game1 = new Game(false);
-        game1.setId(1L);
-        game1.setTitle(title);
-        game1.setDescription(desc);
+        TvShow tvShow1 = new TvShow(seriesNum);
+        tvShow1.setId(1L);
+        tvShow1.setTitle(title);
+        tvShow1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new GameDTO(game1))
+                .body(new TvShowDTO(tvShow1))
                 .when()
-                .post("/api/v1/content/game")
+                .post("/api/v1/content/tv-show")
                 .then()
                 .statusCode(201)
                 .extract().response();
@@ -206,7 +207,7 @@ class GameControllerTest {
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/game/{id}")
+                .get("/api/v1/content/tv-show/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", equalTo(response.path("id")));
@@ -214,42 +215,43 @@ class GameControllerTest {
 
     @Test
     void shouldUpdate() {
-        gameRepository.deleteAll();
+        tvShowRepository.deleteAll();
 
+        int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
         String changed = "Changed";
 
-        Game game1 = new Game(false);
-        game1.setId(1L);
-        game1.setTitle(title);
-        game1.setDescription(desc);
+        TvShow tvShow1 = new TvShow(seriesNum);
+        tvShow1.setId(1L);
+        tvShow1.setTitle(title);
+        tvShow1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new GameDTO(game1))
+                .body(new TvShowDTO(tvShow1))
                 .when()
-                .post("/api/v1/content/game")
+                .post("/api/v1/content/tv-show")
                 .then()
                 .statusCode(201)
                 .extract().response();
 
         Integer extractedId = response.path("id");
-        game1.setId(extractedId.longValue());
-        game1.setTitle(changed);
+        tvShow1.setId(extractedId.longValue());
+        tvShow1.setTitle(changed);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(new GameDTO(game1))
+                .body(new TvShowDTO(tvShow1))
                 .when()
-                .put("/api/v1/content/game")
+                .put("/api/v1/content/tv-show")
                 .then()
                 .statusCode(201);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/game/{id}")
+                .get("/api/v1/content/tv-show/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", equalTo(response.path("id")))
@@ -258,21 +260,22 @@ class GameControllerTest {
 
     @Test
     void shouldDelete() {
-        gameRepository.deleteAll();
+        tvShowRepository.deleteAll();
 
+        int seriesNum = 14;
         String title = "86 2";
         String desc = "Robots.txt 2";
 
-        Game game1 = new Game(false);
-        game1.setId(1L);
-        game1.setTitle(title);
-        game1.setDescription(desc);
+        TvShow tvShow1 = new TvShow(seriesNum);
+        tvShow1.setId(1L);
+        tvShow1.setTitle(title);
+        tvShow1.setDescription(desc);
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .body(new GameDTO(game1))
+                .body(new TvShowDTO(tvShow1))
                 .when()
-                .post("/api/v1/content/game")
+                .post("/api/v1/content/tv-show")
                 .then()
                 .statusCode(201)
                 .extract().response();
@@ -280,21 +283,21 @@ class GameControllerTest {
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .delete("/api/v1/content/game/{id}")
+                .delete("/api/v1/content/tv-show/{id}")
                 .then()
                 .statusCode(204);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/game/{id}")
+                .get("/api/v1/content/tv-show/{id}")
                 .then()
                 .statusCode(404);
 
         given()
                 .pathParam("id", response.path("id"))
                 .when()
-                .get("/api/v1/content/game/{id}/card")
+                .get("/api/v1/content/tv-show/{id}/card")
                 .then()
                 .statusCode(404);
     }

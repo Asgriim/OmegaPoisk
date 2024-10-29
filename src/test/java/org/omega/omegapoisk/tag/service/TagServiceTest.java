@@ -1,15 +1,15 @@
-package org.omega.omegapoisk.service.studio;
+package org.omega.omegapoisk.tag.service;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.omega.omegapoisk.content.entity.Anime;
-import org.omega.omegapoisk.studio.entity.Studio;
+import org.omega.omegapoisk.tag.entity.Tag;
 import org.omega.omegapoisk.content.repository.AnimeRepository;
-import org.omega.omegapoisk.studio.repository.StudioRepository;
+import org.omega.omegapoisk.tag.repository.TagRepository;
 import org.omega.omegapoisk.content.service.AnimeContentService;
-import org.omega.omegapoisk.studio.service.StudioService;
+import org.omega.omegapoisk.tag.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,20 +23,19 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @SpringBootTest
 @Testcontainers
-class StudioServiceTest {
+class TagServiceTest {
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
             "postgres:latest"
     );
 
     @Autowired
-    StudioService studioService;
+    TagService tagService;
 
     @Autowired
-    StudioRepository studioRepository;
+    TagRepository tagRepository;
 
     @Autowired
     AnimeContentService animeContentService;
@@ -44,7 +43,7 @@ class StudioServiceTest {
     @Autowired
     AnimeRepository animeRepository;
 
-    @Value("${spring.application.page-size}")
+    @Value("${spring.application.page}")
     int pageSize;
 
     private Anime anime;
@@ -62,7 +61,7 @@ class StudioServiceTest {
 
     @BeforeEach
     void setUp() {
-        studioRepository.deleteAll();
+        tagRepository.deleteAll();
         animeRepository.deleteAll();
 
         anime = animeContentService.create(new Anime(13));
@@ -77,49 +76,42 @@ class StudioServiceTest {
 
     @Test
     void shouldCreate() {
-        studioService.createStudio(new Studio(0, "Studio 1"));
-        assertThat(studioService.getAllStudios()).hasSize(1);
+        tagService.create(new Tag(0, "action"));
+        assertThat(tagService.getAll()).hasSize(1);
 
-        studioService.createStudio(new Studio(0, "Studio 2"));
-        assertThat(studioService.getAllStudios()).hasSize(2);
+        tagService.create(new Tag(0, "mystery"));
+        assertThat(tagService.getAll()).hasSize(2);
 
-        studioService.createStudio(new Studio(0, "Studio 3"));
-        studioService.createStudio(new Studio(0, "Studio 4"));
-        assertThat(studioService.getAllStudios()).hasSize(4);
+        tagService.create(new Tag(0, "romance"));
+        tagService.create(new Tag(0, "fantasy"));
+        assertThat(tagService.getAll()).hasSize(4);
     }
 
     @Test
-    void shouldGetStudioById() {
-        Studio studio = studioService.createStudio(new Studio(0, "Studio 1"));
-        assertThat(studioService.getStudioById(studio.getId())).isNotNull();
-        assertThat(studioService.getStudioById(studio.getId()).getName()).isEqualTo("Studio 1");
-    }
+    void shouldAddTagToContent() {
+        Tag tag = tagService.create(new Tag(0, "action"));
+        tagService.addTagToContent(anime.getId(), tag.getId());
 
-    @Test
-    void shouldAddStudioToContent() {
-        Studio studio = studioService.createStudio(new Studio(0, "Studio 1"));
-        studioService.addContentToStudio(studio.getId(), anime.getId());
-
-        assertThat(studioService.findByContentId(anime.getId())).isEqualTo(List.of(studio));
+        assertThat(tagService.findByContentId(anime.getId())).isEqualTo(List.of(tag));
     }
 
     @Test
     void shouldDeleteByContent() {
-        Studio studio = studioService.createStudio(new Studio(0, "Studio 1"));
-        studioService.addContentToStudio(studio.getId(), anime.getId());
+        Tag tag = tagService.create(new Tag(0, "action"));
+        tagService.addTagToContent(anime.getId(), tag.getId());
 
-        studioService.deleteContentFromStudio(studio.getId(), anime.getId());
-        assertThat(studioService.findByContentId(anime.getId())).isEqualTo(List.of());
+        tagService.deleteByContentId(anime.getId(), tag.getId());
+        assertThat(tagService.findByContentId(anime.getId())).isEqualTo(List.of());
 
     }
 
     @Test
     void shouldDelete() {
-        Studio studio = studioService.createStudio(new Studio(0, "Studio 1"));
-        studioService.addContentToStudio(studio.getId(), anime.getId());
+        Tag tag = tagService.create(new Tag(0, "action"));
+        tagService.addTagToContent(anime.getId(), tag.getId());
 
-        studioService.deleteStudio(studio.getId());
-        assertThat(studioService.getAllStudios()).hasSize(0);
+        tagService.delete(tag.getId());
+        assertThat(tagService.getAll()).hasSize(0);
 
     }
 
