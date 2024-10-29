@@ -89,7 +89,7 @@ public abstract class AbstractContentController <T extends Content, DTO extends 
     @GetMapping("/{id}/card")
     public ResponseEntity<?> getCardById(@PathVariable long id) {
         ContentCard<T> cardById = contentService.getCardById(id);
-        if (cardById == null) {
+        if (cardById == null || cardById.getContent() == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(mapper.mapCardToDTO(cardById));
