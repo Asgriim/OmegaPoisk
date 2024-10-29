@@ -36,7 +36,6 @@ class AnimeContentServiceTest {
     @Value("${spring.application.page}")
     int pageSize;
 
-
     @BeforeAll
     static void beforeAll() {
         postgres.start();

@@ -142,6 +142,38 @@ class GameControllerTest {
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/game")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/game?page=0&page-to=1")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize*2));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/game/card")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/game/card?page=0&page-to=1")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize*2));
     }
 
     @Test

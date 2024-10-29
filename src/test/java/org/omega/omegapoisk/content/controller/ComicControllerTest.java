@@ -142,6 +142,22 @@ class ComicControllerTest {
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/comic")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/comic?page=0&page-to=1")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize*2));
     }
 
     @Test
@@ -180,6 +196,22 @@ class ComicControllerTest {
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/comic/card")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/comic/card?page=0&page-to=1")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize*2));
     }
 
     @Test

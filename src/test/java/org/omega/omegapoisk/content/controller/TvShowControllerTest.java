@@ -142,6 +142,23 @@ class TvShowControllerTest {
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
+
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/tv-show")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/tv-show?page=0&page-to=1")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize*2));
     }
 
     @Test
@@ -180,6 +197,22 @@ class TvShowControllerTest {
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/tv-show/card")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/tv-show/card?page=0&page-to=1")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize*2));
     }
 
     @Test

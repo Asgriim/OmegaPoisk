@@ -142,6 +142,22 @@ class MovieControllerTest {
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/movie")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/movie?page=0&page-to=1")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize*2));
     }
 
     @Test
@@ -180,6 +196,22 @@ class MovieControllerTest {
                 .then()
                 .statusCode(200)
                 .body(".", hasSize(0));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/movie/card")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize));
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/v1/content/movie/card?page=0&page-to=1")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(pageSize*2));
     }
 
     @Test
