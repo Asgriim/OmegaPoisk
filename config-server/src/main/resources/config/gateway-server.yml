@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - OPTIONS
+              - DELETE
+              - PUT
+              - PATCH
+            allowedHeaders: '*'
+server:
+  port: 8085
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}

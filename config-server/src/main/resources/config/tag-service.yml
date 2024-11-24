@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: OmegaPoisk
+    page: ${SPRING_PAGE}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: ${SPRING_FLYWAY_ENABLED:true}
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+server:
+  port: 8081
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
