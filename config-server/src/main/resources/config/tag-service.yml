@@ -13,8 +13,6 @@ spring:
     property-naming-strategy: SNAKE_CASE
 
 server:
-  servlet:
-    context-path: ${API_PREFIX}
   port: 8081
 
 

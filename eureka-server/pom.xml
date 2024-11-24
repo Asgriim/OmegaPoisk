@@ -15,7 +15,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <spring-cloud.version>2022.0.4</spring-cloud.version>
+        <org.springframework.cloud.version>4.1.3</org.springframework.cloud.version>
     </properties>
 
     <dependencies>
@@ -38,7 +38,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
+                <version>${org.springframework.cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

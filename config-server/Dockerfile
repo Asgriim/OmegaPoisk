@@ -19,7 +19,6 @@ WORKDIR /app
 
 # Copy the built JAR file from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
-COPY src/main/resources/config ./config
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
