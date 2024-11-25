@@ -1,11 +1,11 @@
 spring:
   application:
     name: tag-service
-    page: 5
+    page: ${SPRING_PAGE:5}
   datasource:
-    url: jdbc:postgresql://postgres-db:5432/omega_db
-    username: omega
-    password: omega
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres-db:5432/omega_db}
+    username: ${SPRING_DATASOURCE_USERNAME:omega}
+    password: ${SPRING_DATASOURCE_PASSWORD:omega}
     driver-class-name: org.postgresql.Driver
   jackson:
     property-naming-strategy: SNAKE_CASE

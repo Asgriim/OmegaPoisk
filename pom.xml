@@ -20,6 +20,8 @@
         <module>tag-service</module>
         <module>config-server</module>
         <module>gateway-server</module>
+        <module>common</module>
+        <module>auth-service</module>
     </modules>
 
 </project>
