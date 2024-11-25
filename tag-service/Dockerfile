@@ -2,23 +2,33 @@
 FROM maven:3.8.8-eclipse-temurin-17 AS builder
 WORKDIR /app
 
+ARG SERVICE_NAME=tag-service
+
 # Copy only the pom.xml and dependencies first for caching
-COPY pom.xml .
-COPY src ./src
+COPY $SERVICE_NAME/pom.xml .
+COPY $SERVICE_NAME/src ./src
+COPY common ./common
+
+WORKDIR /app/common
+RUN --mount=type=cache,target=/root/.m2 mvn clean install -DskipTests
+
+WORKDIR /app
 
 # Download dependencies (cache layer)
-RUN mvn dependency:go-offline -B
+RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline -B
 
 # Copy the rest of the application and build
 COPY . .
-RUN mvn clean package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 
 # Stage 2: Run the application
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
+ARG SERVICE_NAME=tag-service
+
 # Copy the built JAR file from the builder stage
-COPY --from=builder /app/target/*.jar app.jar
+COPY --from=builder /app/${SERVICE_NAME}/target/*.jar app.jar
 
 EXPOSE 8800
 

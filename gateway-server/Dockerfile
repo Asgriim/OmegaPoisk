@@ -7,11 +7,11 @@ COPY pom.xml .
 COPY src ./src
 
 # Download dependencies (cache layer)
-RUN mvn dependency:go-offline -B
+RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline -B
 
 # Copy the rest of the application and build
 COPY . .
-RUN mvn clean package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 
 
 # Stage 2: Run the application

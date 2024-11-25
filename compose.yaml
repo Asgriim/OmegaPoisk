@@ -88,7 +88,10 @@ services:
       CONFIG_URL: http://config-server:8800
 
   tag-service:
-    build: ./tag-service
+#    build: ./tag-service
+    build:
+      context: .
+      dockerfile: ./tag-service/Dockerfile
 #    ports:
 #      - "8081:8081"
     depends_on:
