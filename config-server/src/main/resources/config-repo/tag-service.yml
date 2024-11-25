@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: tag-service
+    page: 5
+  datasource:
+    url: jdbc:postgresql://postgres-db:5432/omega_db
+    username: omega
+    password: omega
+    driver-class-name: org.postgresql.Driver
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+server:
+  port: 8081
+
+# API prefix
+tag-service:
+  api:
+    prefix: /api/v1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}

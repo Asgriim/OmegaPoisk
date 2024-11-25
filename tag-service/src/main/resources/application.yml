@@ -1,8 +1,8 @@
 spring:
+  config:
+    import: configserver:${CONFIG_URL:http://localhost:8800}/
   application:
     name: tag-service
-  config:
-    import: 'configserver:'
   cloud:
     config:
       name: ${spring.application.name}
@@ -15,12 +15,12 @@ spring:
         max-attempts: 10
 
 eureka:
-  instance:
-    hostname: localhost
-    prefer-ip-address: true
   client:
-    registerWithEureka: true
-    fetchRegistry: true
-    registryFetchIntervalSeconds: 5
     serviceUrl:
-      defaultZone: ${EUREKA_URL}
+      defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

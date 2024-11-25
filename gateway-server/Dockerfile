@@ -13,6 +13,7 @@ RUN mvn dependency:go-offline -B
 COPY . .
 RUN mvn clean package -DskipTests
 
+
 # Stage 2: Run the application
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
@@ -20,6 +21,6 @@ WORKDIR /app
 # Copy the built JAR file from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
-EXPOSE 8800
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
