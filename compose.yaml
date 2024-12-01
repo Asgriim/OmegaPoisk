@@ -126,9 +126,6 @@ services:
 #      - springboot-network
 
 
-networks:
-  springboot-network:
-    driver: bridge
 
 volumes:
   postgres_data:

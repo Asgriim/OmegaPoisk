@@ -75,15 +75,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken createAuthenticationToken(Claims claims) {
-//        String subject = claims.getSubject();
-//        System.out.println(subject);
+        String subject = claims.getSubject();
+        System.out.println(subject);
 
-        UUID userId;
-        try {
-            userId = UUID.fromString((String) claims.get("id"));
-        } catch (Exception e) {
-            return null;
-        }
+        Long userId = ((Integer) claims.get("id")).longValue();
+        System.out.println(claims);
+
 
         Boolean isEnabled = (Boolean) claims.get("enabled");
         if (isEnabled == null || !isEnabled) {

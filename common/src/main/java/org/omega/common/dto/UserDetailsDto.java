@@ -7,14 +7,14 @@ import java.util.UUID;
 
 public class UserDetailsDto {
 
-    private final UUID id;
+    private final Long id;
     private final Collection<SimpleGrantedAuthority> authorities;
     private final boolean accountNonExpired;
     private final boolean accountNonLocked;
     private final boolean credentialsNonExpired;
     private final boolean enabled;
 
-    public UserDetailsDto(UUID id, Collection<SimpleGrantedAuthority> authorities, boolean accountNonExpired,
+    public UserDetailsDto(Long id, Collection<SimpleGrantedAuthority> authorities, boolean accountNonExpired,
                           boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled) {
         this.id = id;
         this.authorities = authorities;
@@ -24,7 +24,7 @@ public class UserDetailsDto {
         this.enabled = enabled;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 

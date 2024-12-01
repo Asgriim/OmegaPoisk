@@ -39,10 +39,11 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof UserPrincipal customUserDetails) {
             claims.put("id", customUserDetails.getUser().getId());
-            claims.put("roles", customUserDetails.getUser().getRole());
+            claims.put("roles", customUserDetails.getAuthorities());
             claims.put("username", customUserDetails.getUsername());
             claims.put("enabled", customUserDetails.isEnabled());
         }
+        System.out.println("auth clainms " + claims );
         return generateToken(claims, userDetails);
     }
 

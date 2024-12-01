@@ -69,3 +69,10 @@ GET localhost:8080/api/v1/content/review/95?page=0
 ###
 GET localhost:8080/api/v1/test/test2
 
+
+###
+GET localhost:8080/api/v1/tags
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwiaWQiOjcsImVuYWJsZWQiOnRydWUsInVzZXJuYW1lIjoidGVzdCIsInN1YiI6InRlc3QiLCJpYXQiOjE3MzMwNzE1MTgsImV4cCI6MTczMzIxNTUxOH0.JtWGMNDOR683BUVzMEZUteoSK6kIhAecuKbiOEawZM9AOG2uWO4usI17yyRywlJTxtdvTUvaLy4_YUBLMjh0Uj-CQhdUdfIVgqZ5dY3qzPDk-CIXnFzuXEksUZqSh4YV7I_mF5NSf6skXEux87A6SKZ5DSXZYmNRsZ1fzUY9gVuzmP3OU7nGxG4mO90WyXiYA75pxQID2mZt4C05I0IF2lyckm35AokEtvJ0wz6I-rC7HZtDNdhaQHn8BhHq2n4ODfg0pdeNSTk4FuL0fiqEOwrTUp7T_BfVoBy_ehKOgxeu6QAgUMYZEcP2LrKyRwNC9GGvQOHwo8sGEZkeGCChDQ
+
+###
+GET localhost:8080/api/v1/tags
