@@ -2,8 +2,10 @@ package org.omega.tagservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"org.omega.tagservice", "org.omega.common.security"})
 public class TagServiceApplication {
 
 	public static void main(String[] args) {

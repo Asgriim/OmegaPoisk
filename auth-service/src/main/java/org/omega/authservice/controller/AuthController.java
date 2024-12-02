@@ -5,6 +5,7 @@ import org.omega.authservice.dto.UserDTO;
 import org.omega.authservice.service.AuthService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,4 +28,23 @@ public class AuthController {
                 .build();
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PostMapping("/test")
+    public ResponseEntity<Void> test() {
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @PostMapping("/test2")
+    public ResponseEntity<Void> test2() {
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PostMapping("/test3")
+    public ResponseEntity<Void> test3() {
+        return ResponseEntity.ok().build();
+    }
 }

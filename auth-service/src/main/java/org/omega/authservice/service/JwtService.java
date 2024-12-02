@@ -1,6 +1,7 @@
 package org.omega.authservice.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.omega.authservice.security.config.UserPrincipal;
 import io.jsonwebtoken.Claims;
@@ -39,7 +40,7 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof UserPrincipal customUserDetails) {
             claims.put("id", customUserDetails.getUser().getId());
-            claims.put("roles", customUserDetails.getAuthorities());
+            claims.put("roles", customUserDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
             claims.put("username", customUserDetails.getUsername());
             claims.put("enabled", customUserDetails.isEnabled());
         }

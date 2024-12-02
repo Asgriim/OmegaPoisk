@@ -6,6 +6,7 @@ import org.omega.tagservice.entity.Tag;
 import org.omega.tagservice.service.TagService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class TagController {
         return ResponseEntity.ok(byId.stream().map(TagDTO::new).toList());
     }
 
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping(value = {"","/"})
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(tagService.getAll().stream().map(TagDTO::new).toList());

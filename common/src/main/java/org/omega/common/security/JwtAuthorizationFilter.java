@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Date;
@@ -20,14 +23,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final String HEADER = "Authorization";
     private final String PREFIX = "Bearer ";
     private final SecurityHelper securityHelper;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
-                                  SecurityHelper securityHelper) {
-        super(authenticationManager);
+    public JwtAuthorizationFilter(SecurityHelper securityHelper) {
         this.securityHelper = securityHelper;
     }
 
@@ -36,10 +37,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException {
         UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
         if (authentication == null) {
+            System.out.println("polnaya pizda");
             filterChain.doFilter(request, response);
             return;
         }
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        System.out.println(authentication);
         filterChain.doFilter(request, response);
     }
 
@@ -87,11 +92,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return null;
         }
 
+        System.out.println(claims.get("roles"));
         List<SimpleGrantedAuthority> authorities = ((List<?>) claims.get("roles"))
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.toString()))
                 .collect(Collectors.toList());
-
+        System.out.println(authorities);
         return new UsernamePasswordAuthenticationToken(
                 new UserDetailsDto(userId, authorities, true, true, true, isEnabled),
                 null,

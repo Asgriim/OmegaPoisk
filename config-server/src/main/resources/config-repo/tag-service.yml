@@ -22,13 +22,3 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
-
-keys:
-  publicKey: |
-    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1tm6iFcR2RR65oYbJS8A
-    Vb3Y0BXVX+lvN+IWW283aeTjnQXCnUi1cIoOyAxD7bxglHutQEgXRxiYkBeyUFHU
-    kLV+QfqyLRXYxXSUIkQ7v36NNl5cK3E8g2jTb3x1OYsrdLVw6ZyhZVAtWe55/r+7
-    +GmPogVzqoRLDp3cDa1TVcoE9VndH2GK6TlJNkDdU5Bc9CRTxiAxcktk6DJ46HYe
-    UH7c7NGtZDwFdPp/j+ibvxFlaToyDmw+eSFfDZj0YzoeNAXXK3h+I7kRV59naXS3
-    xbM482ZB/Iw/gYiix5SV24VrcF83cOltvLHksjlC86WUA5RTZmb61kS5bvQlCQ5n
-    pQIDAQAB
