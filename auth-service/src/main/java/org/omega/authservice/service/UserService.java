@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
+
     public User getUserByLogin(String login) {
         User user = userRepository.findByLogin(login).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         user.setRole(roleService.getByRoleId(user.getRoleId()));

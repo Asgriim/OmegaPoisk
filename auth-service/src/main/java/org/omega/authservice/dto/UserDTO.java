@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.omega.authservice.entity.Role;
+import org.omega.authservice.entity.User;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,6 +32,11 @@ public class UserDTO {
     private String pass;
 
     @NotBlank(message = "Role cannot be blank")
-    @Pattern(regexp = "^(admin|user)$", message = "Role must be either admin or user or creator")
+    @Pattern(regexp = "^(ADMIN|USER)$", message = "Role must be either admin or user")
     private String role;
+
+    public User toUser() {
+        return new User(id, login, email, pass, 0, null);
+    }
+
 }

@@ -15,4 +15,7 @@ public class RoleService {
         return roleRepository.findById(roleId).orElse(null);
     }
 
+    RoleEntity getByRoleName(String roleName) {
+        return roleRepository.findByName(roleName).orElse(null);
+    }
 }

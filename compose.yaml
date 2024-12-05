@@ -71,7 +71,6 @@ services:
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
       CONFIG_URL: http://config-server:8800
-      ACTIVE_PROFILE: dev
 
 
   auth-service:

@@ -1,14 +1,29 @@
 
 POST localhost:8080/api/v1/auth/register
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1NVUEVSVklTT1IiXSwiaWQiOjcsImVuYWJsZWQiOnRydWUsInVzZXJuYW1lIjoidGVzdCIsInN1YiI6InRlc3QiLCJpYXQiOjE3MzM0MzI3MjUsImV4cCI6MTczMzU3NjcyNX0.eKZ7Cl_JimCmx8N5s8t3fhQwj4XKdreWUjRuoi7rbQyryYSvHrSWsQMzvO8wShjwulEg5IpuLIxt4dYgpQewW7rtvq7Lbt1Y5pdqKh3zu9AwlC8j3b0dVKAHVswnC02VqTIVthDhLodWA-D1PrZOZf2Wc0tJVfj3MdKija6Nby4z2I8ZYubGOsVBWzS7TU2O7Uhc7trXl6_ziWyLYoYqQ6w8B4sOuhkE_QnrkH9DZGNqQ5aYG3-Ft3XntYxcQfCJKlW8E5M1SQ2t14OiUE3JfwQrqynLl9mdmKoX8gvBcECtJSjI5hOE90fC568Bv6MI-coeDeQXKZcvdO-6ewHwNA
+
 
 {
   "id": 0,
-  "login": "test",
-  "email": "email@a.ru",
-  "pass": "test",
-  "role": "admin"
+  "login": "user",
+  "email": "user@a.ru",
+  "pass": "user",
+  "role": "USER"
 }
+
+###
+POST localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+"id": 0,
+"login": "user",
+"email": "user@a.ru",
+"pass": "user",
+"role": "USER"
+}
+
 
 ###
 POST localhost:8084/api/v1/auth/login
@@ -73,8 +88,7 @@ GET localhost:8080/api/v1/test/test2
 //admin jwt
 ###
 GET localhost:8080/api/v1/tags
-Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1NVUEVSVklTT1IiXSwiaWQiOjcsImVuYWJsZWQiOnRydWUsInVzZXJuYW1lIjoidGVzdCIsInN1YiI6InRlc3QiLCJpYXQiOjE3MzMxNjU4NTYsImV4cCI6MTczMzMwOTg1Nn0.rDgPn93HN2eJ6x929Q3V6xK40yOeZFsYor9ys4zMmHqlbhyLPoPZ6Tntzj8HeKDDTXc0nkM5yr1fBT3mi5MmB44SsqVigcG1srwFy6-WE03O3dVtGf5jpu9XaJSYa2nxVkIaxcMMzIOrxdk4e1LdxDHrXLFfZqdgDHAKgqYkFu3q2MnIBmA1fttAFbWS3N3D12TQk1xcEhCxZ7K3bxTkbMZhZumoggvcRlLeira7e7V8PF5ny_w33eSgsgo8SjsZzuXAHWS3KWh-67ZXwMbkt603YUp0fVGo7FITcwhPxak1wCU5Y_ANfVlUU3zto_XNFqqNTvG9f1O5pD3lAilIEQ
-
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1NVUEVSVklTT1IiXSwiaWQiOjcsImVuYWJsZWQiOnRydWUsInVzZXJuYW1lIjoidGVzdCIsInN1YiI6InRlc3QiLCJpYXQiOjE3MzM0MzI3MjUsImV4cCI6MTczMzU3NjcyNX0.eKZ7Cl_JimCmx8N5s8t3fhQwj4XKdreWUjRuoi7rbQyryYSvHrSWsQMzvO8wShjwulEg5IpuLIxt4dYgpQewW7rtvq7Lbt1Y5pdqKh3zu9AwlC8j3b0dVKAHVswnC02VqTIVthDhLodWA-D1PrZOZf2Wc0tJVfj3MdKija6Nby4z2I8ZYubGOsVBWzS7TU2O7Uhc7trXl6_ziWyLYoYqQ6w8B4sOuhkE_QnrkH9DZGNqQ5aYG3-Ft3XntYxcQfCJKlW8E5M1SQ2t14OiUE3JfwQrqynLl9mdmKoX8gvBcECtJSjI5hOE90fC568Bv6MI-coeDeQXKZcvdO-6ewHwNA
 //user jwt
 ###
 GET localhost:8080/api/v1/tags
