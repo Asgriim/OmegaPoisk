@@ -23,6 +23,7 @@
         <module>common</module>
         <module>auth-service</module>
         <module>studio-service</module>
+        <module>rating-service</module>
     </modules>
 
 </project>

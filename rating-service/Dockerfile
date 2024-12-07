@@ -2,7 +2,7 @@
 FROM maven:3.8.8-eclipse-temurin-17 AS builder
 WORKDIR /app
 
-ARG SERVICE_NAME=studio-service
+ARG SERVICE_NAME=rating-service
 
 # Copy only the pom.xml and dependencies first for caching
 COPY $SERVICE_NAME/pom.xml .
@@ -26,7 +26,7 @@ RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
-ARG SERVICE_NAME=studio-service
+ARG SERVICE_NAME=rating-service
 # Copy the built JAR file from the builder stage
 COPY --from=builder /app/${SERVICE_NAME}/target/*.jar app.jar
 
