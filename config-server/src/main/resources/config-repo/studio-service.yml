@@ -1,25 +1,21 @@
 spring:
   application:
-    name: tag-service
+    name: studio-service
     page: ${SPRING_PAGE:5}
-  r2dbc:
-    url: r2dbc:postgresql://postgres-db:5432/omega_db
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres-db:5432/omega_db}
     username: ${SPRING_DATASOURCE_USERNAME:omega}
     password: ${SPRING_DATASOURCE_PASSWORD:omega}
-  data:
-    r2dbc:
-      repositories:
-        enabled: true
+    driver-class-name: org.postgresql.Driver
   jackson:
     property-naming-strategy: SNAKE_CASE
 
 server:
-  port: 8083
+  port: 8081
 
 # API prefix
-tag-service:
-  api:
-    prefix: /api/v1
+api:
+  prefix: /api/v1
 
 eureka:
   client:

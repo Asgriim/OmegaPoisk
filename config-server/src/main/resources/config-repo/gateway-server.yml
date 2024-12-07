@@ -11,7 +11,7 @@ spring:
           filters:
             - name: CircuitBreaker
               args:
-                name: omegaCircuitBreaker
+                name: tagCircuitBreaker
                 fallbackUri: forward:/fallback
         - id: auth-service
           uri: lb://auth-service
@@ -21,6 +21,15 @@ spring:
             - name: CircuitBreaker
               args:
                 name: authCircuitBreaker
+                fallbackUri: forward:/fallback
+        - id: studio-service
+          uri: lb://studio-service
+          predicates:
+            - Path=/api/v1/studio/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: studioCircuitBreaker
                 fallbackUri: forward:/fallback
 server:
   port: 8080
@@ -44,4 +53,6 @@ resilience4j:
       tagCircuitBreaker:
         base-config: omega
       authCircuitBreaker:
+        base-config: omega
+      studioCircuitBreaker:
         base-config: omega
