@@ -31,7 +31,6 @@ public class TagController {
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping(value = {"/",""})
     public Flux<?> getAll() {
-        System.out.println("idi nahui");
         return tagService.getAll().map(TagDTO::new);
     }
 
@@ -45,6 +44,7 @@ public class TagController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PostMapping("/{id}/content/{contId}")
     public Mono<ResponseEntity<Void>> addContentTag(@PathVariable("id") long id, @PathVariable("contId") long contId) {
         return tagService.addTagToContent(contId, id)

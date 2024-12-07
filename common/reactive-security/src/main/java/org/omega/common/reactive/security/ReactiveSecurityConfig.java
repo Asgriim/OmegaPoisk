@@ -18,7 +18,7 @@ public class ReactiveSecurityConfig extends BaseSecurityConfiguration {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
-                .addFilterBefore(new JwtAuthorizationFilter(), SecurityWebFiltersOrder.AUTHORIZATION)
+                .addFilterBefore(new JwtAuthorizationFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
                         .anyExchange().authenticated()
                 )
