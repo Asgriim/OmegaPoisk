@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM maven:3.8.8-eclipse-temurin-17 AS builderstudio
+FROM maven:3.8.8-eclipse-temurin-17 AS builder
 WORKDIR /app
 
 ARG SERVICE_NAME=studio-service
@@ -31,7 +31,7 @@ WORKDIR /app
 
 ARG SERVICE_NAME=studio-service
 # Copy the built JAR file from the builder stage
-COPY --from=builderstudio /app/${SERVICE_NAME}/target/*.jar app.jar
+COPY --from=builder /app/${SERVICE_NAME}/target/*.jar app.jar
 
 EXPOSE 8800
 

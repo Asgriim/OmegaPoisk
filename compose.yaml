@@ -86,21 +86,21 @@ services:
       EUREKA_URL: http://eureka-server:8761/eureka/
       CONFIG_URL: http://config-server:8800
 
-#  tag-service:
-##    build: ./tag-service
-#    build:
-#      context: .
-#      dockerfile: ./tag-service/Dockerfile
-##    ports:
-##      - "8081:8081"
-#    depends_on:
-#      eureka-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#    environment:
-#      EUREKA_URL: http://eureka-server:8761/eureka/
-#      CONFIG_URL: http://config-server:8800
+  tag-service:
+#    build: ./tag-service
+    build:
+      context: .
+      dockerfile: ./tag-service/Dockerfile
+#    ports:
+#      - "8081:8081"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
 
   studio-service:
     build:
