@@ -24,6 +24,7 @@
         <module>auth-service</module>
         <module>studio-service</module>
         <module>rating-service</module>
+        <module>review-service</module>
     </modules>
 
 </project>

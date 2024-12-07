@@ -40,6 +40,15 @@ spring:
               args:
                 name: ratingCircuitBreaker
                 fallbackUri: forward:/fallback
+        - id: review-service
+          uri: lb://review-service
+          predicates:
+            - Path=/api/v1/content/review/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: reviewCircuitBreaker
+                fallbackUri: forward:/fallback
 server:
   port: 8080
 
@@ -66,4 +75,6 @@ resilience4j:
       studioCircuitBreaker:
         base-config: omega
       ratingCircuitBreaker:
+        base-config: omega
+      reviewCircuitBreaker:
         base-config: omega

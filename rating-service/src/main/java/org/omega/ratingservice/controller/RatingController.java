@@ -9,6 +9,7 @@ import org.omega.ratingservice.service.AvgRatingService;
 import org.omega.ratingservice.service.RatingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class RatingController {
     private final RatingService ratingService;
     private final AvgRatingService avgRatingService;
 
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/{id}/avg")
     public ResponseEntity<?> getAvgById(@PathVariable int id) {
         AvgRating avgRating = avgRatingService.getAvgRatingByContentId(id);
@@ -26,6 +28,7 @@ public class RatingController {
         return ResponseEntity.ok(new AvgRatingDTO(avgRating));
     }
 
+    @PreAuthorize("hasAnyRole('USER')")
     @PostMapping(value = {"","/"})
     public ResponseEntity<?> create(@RequestBody @Validated RatingDTO ratingDTO) {
         Rating entity = ratingDTO.toEntity();
@@ -33,6 +36,7 @@ public class RatingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new RatingDTO(created));
     }
 
+    @PreAuthorize("hasAnyRole('USER')")
     @PutMapping(value = {"","/"})
     public ResponseEntity<?> update(@RequestBody @Validated RatingDTO ratingDTO) {
         Rating entity = ratingDTO.toEntity();
@@ -40,6 +44,7 @@ public class RatingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new RatingDTO(created));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
         ratingService.delete(id);

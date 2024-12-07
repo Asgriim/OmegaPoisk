@@ -34,14 +34,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
         UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
         if (authentication == null) {
-            System.out.println("polnaya pizda");
             filterChain.doFilter(request, response);
             return;
         }
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        System.out.println(authentication);
         filterChain.doFilter(request, response);
     }
 
@@ -78,7 +76,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private UsernamePasswordAuthenticationToken createAuthenticationToken(Claims claims) {
         String subject = claims.getSubject();
-        System.out.println(subject);
 
         Long userId = ((Integer) claims.get("id")).longValue();
         System.out.println(claims);
@@ -89,12 +86,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return null;
         }
 
-        System.out.println(claims.get("roles"));
         List<SimpleGrantedAuthority> authorities = ((List<?>) claims.get("roles"))
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.toString()))
                 .collect(Collectors.toList());
-        System.out.println(authorities);
         return new UsernamePasswordAuthenticationToken(
                 new UserDetailsDto(userId, authorities, true, true, true, isEnabled),
                 null,
