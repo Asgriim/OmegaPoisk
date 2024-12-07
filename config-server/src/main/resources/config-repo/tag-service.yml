@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: tag-service
+    page: ${SPRING_PAGE:5}
+  r2dbc:
+    url: r2dbc:postgresql://postgres-db:5432/omega_db
+    username: ${SPRING_DATASOURCE_USERNAME:omega}
+    password: ${SPRING_DATASOURCE_PASSWORD:omega}
+  data:
+    r2dbc:
+      repositories:
+        enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+server:
+  port: 8083
+
+# API prefix
+tag-service:
+  api:
+    prefix: /api/v1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}

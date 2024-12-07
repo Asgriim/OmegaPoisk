@@ -1,4 +1,6 @@
 services:
+
+
   postgres:
     image: 'postgres:latest'
     container_name: 'postgres-db'
@@ -13,18 +15,36 @@ services:
       interval: 5s
       timeout: 2s
       retries: 5
-      start_period: 10s
     volumes:
       - 'postgres_data:/var/lib/postgresql/data'
-    networks:
-      - 'springboot-network'
 
-  spring-app:
-    image: omegapoisk:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
+
+  eureka-server:
+    build: ./eureka-server
+    ports:
+      - '8761:8761'
+    healthcheck:
+      test: "curl --silent --fail http://localhost:8761/actuator/health | grep '\"status\":\"UP\"' || exit 1"
+      interval: 5s
+      timeout: 2s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+
+  config-server:
+    build: ./config-server
+    ports:
+      - "8800:8800"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
     environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
+      ACTIVE_PROFILE: dev
       SPRING_PAGE: 5
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres-db:5432/omega_db'
       SPRING_DATASOURCE_USERNAME: 'omega'
@@ -32,18 +52,106 @@ services:
       SPRING_FLYWAY_ENABLED: 'true'
       API_PREFIX: '/api/v1'
       JWT_SECRET: 'aboba'
-    depends_on:
-      postgres:
-        condition: service_healthy
+    healthcheck:
+      test: "curl --silent --fail config-server:8800/actuator/health | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  gateway-server:
+    build: ./gateway-server
     ports:
-      - '8080:8080'
-    networks:
-      - springboot-network
+      - "8080:8080"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
 
 
-networks:
-  springboot-network:
-    driver: bridge
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
 
+  tag-service:
+#    build: ./tag-service
+    build:
+      context: .
+      dockerfile: ./tag-service/Dockerfile
+#    ports:
+#      - "8081:8081"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
+
+  studio-service:
+    build:
+      context: .
+      dockerfile: ./studio-service/Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
+
+  rating-service:
+    build:
+      context: .
+      dockerfile: ./rating-service/Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
+
+  review-service:
+    build:
+      context: .
+      dockerfile: ./review-service/Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
+
+  content-service:
+    build:
+      context: .
+      dockerfile: ./content-service/Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
 volumes:
   postgres_data:

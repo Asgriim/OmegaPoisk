@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: content-service
+    page: ${SPRING_PAGE:5}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres-db:5432/omega_db}
+    username: ${SPRING_DATASOURCE_USERNAME:omega}
+    password: ${SPRING_DATASOURCE_PASSWORD:omega}
+    driver-class-name: org.postgresql.Driver
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+server:
+  port: 8089
+
+# API prefix
+api:
+  prefix: /api/v1
+
+rating:
+  service:
+    url: ${RATING_URL:http://rating-service:8086/api/v1/content/rating}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}

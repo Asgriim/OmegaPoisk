@@ -1,0 +1,26 @@
+spring:
+  config:
+    import: configserver:${CONFIG_URL:http://localhost:8800}/
+  application:
+    name: tag-service
+  cloud:
+    config:
+      name: ${spring.application.name}
+      uri: ${CONFIG_URL}
+      fail-fast: true
+      retry:
+        initial-interval: 2000
+        max-interval: 10000
+        multiplier: 2
+        max-attempts: 10
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
