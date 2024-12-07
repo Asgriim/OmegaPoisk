@@ -53,8 +53,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (parsedClaims == null || isTokenExpired(parsedClaims)) {
             return null;
         }
-
-        return createAuthenticationToken(parsedClaims);
+        UsernamePasswordAuthenticationToken authenticationToken = createAuthenticationToken(parsedClaims, token);
+        return authenticationToken;
     }
 
     private String extractToken(HttpServletRequest request) {
@@ -74,7 +74,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         return claims.getExpiration().before(new Date());
     }
 
-    private UsernamePasswordAuthenticationToken createAuthenticationToken(Claims claims) {
+    private UsernamePasswordAuthenticationToken createAuthenticationToken(Claims claims, String token) {
         String subject = claims.getSubject();
 
         Long userId = ((Integer) claims.get("id")).longValue();
@@ -92,7 +92,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 .collect(Collectors.toList());
         return new UsernamePasswordAuthenticationToken(
                 new UserDetailsDto(userId, authorities, true, true, true, isEnabled),
-                null,
+                token,
                 authorities
         );
     }

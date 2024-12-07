@@ -24,7 +24,6 @@ public class RatingController {
     @GetMapping("/{id}/avg")
     public ResponseEntity<?> getAvgById(@PathVariable int id) {
         AvgRating avgRating = avgRatingService.getAvgRatingByContentId(id);
-
         return ResponseEntity.ok(new AvgRatingDTO(avgRating));
     }
 

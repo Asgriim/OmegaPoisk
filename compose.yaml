@@ -140,5 +140,18 @@ services:
     environment:
       EUREKA_URL: http://eureka-server:8761/eureka/
       CONFIG_URL: http://config-server:8800
+
+  content-service:
+    build:
+      context: .
+      dockerfile: ./content-service/Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
 volumes:
   postgres_data:

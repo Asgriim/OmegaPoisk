@@ -25,6 +25,7 @@
         <module>studio-service</module>
         <module>rating-service</module>
         <module>review-service</module>
+        <module>content-service</module>
     </modules>
 
 </project>

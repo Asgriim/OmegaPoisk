@@ -49,6 +49,15 @@ spring:
               args:
                 name: reviewCircuitBreaker
                 fallbackUri: forward:/fallback
+        - id: content-service
+          uri: lb://content-service
+          predicates:
+            - Path=/api/v1/content/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: reviewCircuitBreaker
+                fallbackUri: forward:/fallback
 server:
   port: 8080
 
@@ -57,7 +66,6 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
 
-#todo inctances for all services
 resilience4j:
   circuitbreaker:
     configs:
@@ -77,4 +85,6 @@ resilience4j:
       ratingCircuitBreaker:
         base-config: omega
       reviewCircuitBreaker:
+        base-config: omega
+      contentCircuitBreaker:
         base-config: omega
