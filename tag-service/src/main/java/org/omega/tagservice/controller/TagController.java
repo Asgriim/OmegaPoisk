@@ -9,7 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,40 +21,48 @@ import java.util.List;
 public class TagController {
     private final TagService tagService;
 
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/content/{id}")
-    public ResponseEntity<?> getContentTags(@PathVariable("id") long id) {
-        List<Tag> byId = tagService.findByContentId(id);
-        return ResponseEntity.ok(byId.stream().map(TagDTO::new).toList());
+    public Flux<?> getContentTags(@PathVariable("id") long id) {
+        return tagService.findByContentId(id).map(TagDTO::new);
     }
+
 
     @PreAuthorize("hasAnyRole('USER')")
-    @GetMapping(value = {"","/"})
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(tagService.getAll().stream().map(TagDTO::new).toList());
+    @GetMapping(value = {"/",""})
+    public Flux<?> getAll() {
+        System.out.println("idi nahui");
+        return tagService.getAll().map(TagDTO::new);
     }
 
-    @PostMapping(value = {"","/"})
-    public ResponseEntity<?> createTag(@RequestBody @Validated TagDTO tag) {
-        Tag created = tagService.create(tag.toEntity());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TagDTO(created));
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PostMapping(value = {"", "/"})
+    public Mono<ResponseEntity<TagDTO>> createTag(@RequestBody @Validated TagDTO tag) {
+        return tagService.create(tag.toEntity())
+                .map(created -> ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body(new TagDTO(created)));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping("/{id}/content/{contId}")
-    public ResponseEntity<?> addContentTag(@PathVariable("id") long id, @PathVariable("contId") long contId) {
-        tagService.addTagToContent(contId, id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public Mono<ResponseEntity<Void>> addContentTag(@PathVariable("id") long id, @PathVariable("contId") long contId) {
+        return tagService.addTagToContent(contId, id)
+                .then(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTag(@PathVariable("id") long id) {
-        tagService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public Mono<ResponseEntity<Void>> deleteTag(@PathVariable("id") long id) {
+        return tagService.delete(id)
+                .then(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}/content/{contId}")
-    public ResponseEntity<?> deleteContentTag(@PathVariable("id") long id, @PathVariable("contId") long contId) {
-        tagService.deleteByContentId(contId, id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public Mono<ResponseEntity<Void>> deleteContentTag(@PathVariable("id") long id, @PathVariable("contId") long contId) {
+        return tagService.deleteByContentId(contId, id)
+                .then(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()));
     }
 
 }

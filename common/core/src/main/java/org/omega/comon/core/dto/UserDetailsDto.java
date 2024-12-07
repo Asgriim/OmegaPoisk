@@ -1,4 +1,4 @@
-package org.omega.common.dto;
+package org.omega.comon.core.dto;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.UUID;
 
 public class UserDetailsDto {
-
     private final Long id;
     private final Collection<SimpleGrantedAuthority> authorities;
     private final boolean accountNonExpired;

@@ -1,4 +1,4 @@
-package org.omega.common.dto;
+package org.omega.comon.core.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

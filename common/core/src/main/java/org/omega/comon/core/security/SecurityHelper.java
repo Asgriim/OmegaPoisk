@@ -1,4 +1,4 @@
-package org.omega.common.security;
+package org.omega.comon.core.security;
 
 import java.security.PublicKey;
 

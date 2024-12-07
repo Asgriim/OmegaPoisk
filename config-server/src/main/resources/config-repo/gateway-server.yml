@@ -30,6 +30,7 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
 
+#todo inctances for all services
 resilience4j:
   circuitbreaker:
     configs:

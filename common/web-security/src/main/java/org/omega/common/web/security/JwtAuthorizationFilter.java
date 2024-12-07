@@ -1,36 +1,33 @@
-package org.omega.common.security;
+package org.omega.common.web.security;
+
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import io.jsonwebtoken.Claims;
-import org.omega.common.dto.UserDetailsDto;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.omega.comon.core.dto.UserDetailsDto;
+import org.omega.comon.core.security.JwtUtils;
+import org.omega.comon.core.security.SecurityHelper;
+import org.omega.comon.core.security.SecurityHelperClass;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final String HEADER = "Authorization";
     private final String PREFIX = "Bearer ";
-    private final SecurityHelper securityHelper;
+    private final SecurityHelper securityHelper = new SecurityHelperClass();
 
-    public JwtAuthorizationFilter(SecurityHelper securityHelper) {
-        this.securityHelper = securityHelper;
-    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

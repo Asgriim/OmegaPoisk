@@ -1,4 +1,4 @@
-package org.omega.common.security;
+package org.omega.comon.core.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -37,4 +37,5 @@ public class JwtUtils {
         }
         return claims;
     }
+
 }

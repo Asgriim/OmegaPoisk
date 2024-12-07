@@ -1,4 +1,4 @@
-package org.omega.common.security;
+package org.omega.comon.core.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-@Component
 public class SecurityHelperClass implements SecurityHelper {
     private final String publicKey = " MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1tm6iFcR2RR65oYbJS8A\n" +
             "    Vb3Y0BXVX+lvN+IWW283aeTjnQXCnUi1cIoOyAxD7bxglHutQEgXRxiYkBeyUFHU\n" +
