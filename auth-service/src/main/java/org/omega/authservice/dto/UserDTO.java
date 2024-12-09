@@ -36,7 +36,7 @@ public class UserDTO {
     private String role;
 
     public User toUser() {
-        return new User(id, login, email, pass, 0, null);
+        return new User(id, login, pass, email, 0, null);
     }
 
 }

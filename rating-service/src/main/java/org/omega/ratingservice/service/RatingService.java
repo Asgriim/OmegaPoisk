@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RatingService {
     private final RatingRepository ratingRepository;
 
-    public Rating findByUserAndContentId(final int contentId, final int userId) {
+    public Rating findByContentIdAndUserId(final int contentId, final int userId) {
         return ratingRepository.findByContentIdAndUserId(contentId, userId);
     }
 
@@ -22,7 +22,7 @@ public class RatingService {
 
     @Transactional
     public Rating update(final Rating rating) {
-        Rating r2 = findByUserAndContentId(rating.getContentId(), rating.getUserId());
+        Rating r2 = findByContentIdAndUserId(rating.getContentId(), rating.getUserId());
         if (r2 != null) {
             rating.setId(r2.getId());
         }

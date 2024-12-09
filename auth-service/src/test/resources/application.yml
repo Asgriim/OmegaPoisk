@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: auth-service
+    page: 5
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  cloud:
+    config:
+      enabled: false
+
+server:
+  port: 8089
+
+# API prefix
+api:
+  prefix: /api/v1
+
+auth-service:
+  token: eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlkIjo3LCJlbmFibGVkIjp0cnVlLCJ1c2VybmFtZSI6InRlc3QiLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzMzNjk0NTM2LCJleHAiOjE3MzQxMjY1MzZ9.TNQuG5iXMz_liTgbcaqp0m5XBbqx2BWapBqWeCSf8SG0Syy9HvrORJ7Dhl4twTjcHtr-q7jI69lX-DIaT0wOqoStlUSVcoRn9CRE2uQgK6RbE_Kz2Q6vwzXBdVEk1VWATOfwVDXWsRMnpp3YTaHLTlk2bT9ISSl2IPis6nSlw1NQZGKtbWieqqY9A_ltUg7b19MQE3mHNFRXYXAqTB2NVvrpRmpZb67yG1a9suEGBw3VOM9JloRfNHAdRfCbMGGkxecJtfVO7hngbZNK867X-nhkd6427kWam54XqkceLHumxlAdgWxX3zfw8PTpIinOL_IeULKYd3iUhfAYSvd7OA
+
+eureka:
+  client:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+keys:
+  privateKey: |
+    MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDW2bqIVxHZFHrm
+    hhslLwBVvdjQFdVf6W834hZbbzdp5OOdBcKdSLVwig7IDEPtvGCUe61ASBdHGJiQ
+    F7JQUdSQtX5B+rItFdjFdJQiRDu/fo02XlwrcTyDaNNvfHU5iyt0tXDpnKFlUC1Z
+    7nn+v7v4aY+iBXOqhEsOndwNrVNVygT1Wd0fYYrpOUk2QN1TkFz0JFPGIDFyS2To
+    Mnjodh5Qftzs0a1kPAV0+n+P6Ju/EWVpOjIObD55IV8NmPRjOh40BdcreH4juRFX
+    n2dpdLfFszjzZkH8jD+BiKLHlJXbhWtwXzdw6W28seSyOULzpZQDlFNmZvrWRLlu
+    9CUJDmelAgMBAAECggEACrqTWVzvuTq6lb8QpUoJkZPfZdS7867Wgks5+UA+hifg
+    mJDBvSpKVTUFCUcDhWBTela1ZMZffd9j5EjVULQlZ0HeQjE2AJEHYs+Fg4iLa0Pz
+    N/R8/yEHzTrI2YJfiuDA6h0SvGJj9N6MxTbmxKqSb787EEjcE8xzaxFwUbExaNE2
+    7SDqQegMVSVzVWScOQdSySGuXiyoRW32t+Yg5VaWcdBD3SHaFwS63S8MiAsv4juV
+    hcgkMIast68Hxq1skAUTYa2QxqmRtcoTtBE9mho8miY0PSIbWeZJ+2Cl8Lit0Vt6
+    YiuDlA04IImcuTNajHTAFPN4rHX1FwQX7BAPhUi9aQKBgQD/jgj98qXk9BemwA8n
+    Be0tpHZQXjTMqgsO1q5ikRgV6gq++s0NSYvQuRZu971eC1w+08Q0OrRty8a33HmZ
+    GboZvFrcVqMCQ2FiMkPF3H2JNR8C1FmcfLsw/26AnIOlCsivZoBTvVDWeHxi4IaR
+    rYUlXofyvw23O3svw61FUfKo7wKBgQDXOYqYwuYG3IiyJQ33x1Y6LMFmWBccpzj4
+    u3SxeXYJ1DlewwB2UR64GrRsPT4tRKvwgK4AfI+4MPIwQzqImJYflAPbyOq7SaXy
+    kD3ukvmunOAO2koyWoGJ3fCFCkShY7JF2BOHEQl6z+J9ys7svSI3IRgJQdEwpohU
+    hFKj2OFwqwKBgQCBGuuWCAEhcuOD/aFqEIdrOJwBLCa2gu2FOJXu++hUIeH968yt
+    +srkzqzzsLr9iPW4U9nanRHMKlehSYQxAZtQJyUsDaTantnS9xvgGO1e5PRexJLl
+    COq07UaROQEU3ybV3g3UwF7XixUkCtRRQn1yjJhX3Yd7W1R3o/6kd6sFBwKBgQDS
+    qcvzgrHM/Yf/dy2Y3lCUWMJk/syAi13EeRfbr1vOeyA8lPqa1QQQiHMZj0iQ3qq9
+    mfa3GzVBwQcOHn/ovBIVjrfIJX09HPWF25IDN3GVbJATea8uYlBxNf/6+PX8Uq1o
+    l/tlNVPmFh1Hq3+nUelvtMDmLronuJmwwGRzZBImSQKBgQC5lr+xspjjkA71XrJ+
+    T5IzBviz/FBkzfEM1RleiZUU0PTUNEe+k0oapD5qNTlMqC0C7GW1FKJ89CcVHXH+
+    59VpEBxs2yANnKiL6EvQZRliREetDAHnDclbezyU2nExfIZQgxcsoon7poTu3Uwr
+    12RHfx6Du/cOIav3hgLmZ4yF/A==
+  publicKey: |
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1tm6iFcR2RR65oYbJS8A
+    Vb3Y0BXVX+lvN+IWW283aeTjnQXCnUi1cIoOyAxD7bxglHutQEgXRxiYkBeyUFHU
+    kLV+QfqyLRXYxXSUIkQ7v36NNl5cK3E8g2jTb3x1OYsrdLVw6ZyhZVAtWe55/r+7
+    +GmPogVzqoRLDp3cDa1TVcoE9VndH2GK6TlJNkDdU5Bc9CRTxiAxcktk6DJ46HYe
+    UH7c7NGtZDwFdPp/j+ibvxFlaToyDmw+eSFfDZj0YzoeNAXXK3h+I7kRV59naXS3
+    xbM482ZB/Iw/gYiix5SV24VrcF83cOltvLHksjlC86WUA5RTZmb61kS5bvQlCQ5n
+    pQIDAQAB
