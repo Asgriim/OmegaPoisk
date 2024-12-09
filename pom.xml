@@ -26,6 +26,7 @@
         <module>rating-service</module>
         <module>review-service</module>
         <module>content-service</module>
+        <module>ReportAggregator</module>
     </modules>
 
 </project>

@@ -19,7 +19,6 @@ public class TagService {
     }
 
     public Flux<Tag> getAll() {
-        System.out.println("pizda reactive service");
         return tagRepository.findAll();
     }
 

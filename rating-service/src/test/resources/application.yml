@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: rating-service
+    page: 5
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  cloud:
+    config:
+      enabled: false
+
+server:
+  port: 8087
+
+# API prefix
+api:
+  prefix: /api/v1
+
+rating-service:
+  token: eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlkIjo3LCJlbmFibGVkIjp0cnVlLCJ1c2VybmFtZSI6InRlc3QiLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzMzNjk0NTM2LCJleHAiOjE3MzQxMjY1MzZ9.TNQuG5iXMz_liTgbcaqp0m5XBbqx2BWapBqWeCSf8SG0Syy9HvrORJ7Dhl4twTjcHtr-q7jI69lX-DIaT0wOqoStlUSVcoRn9CRE2uQgK6RbE_Kz2Q6vwzXBdVEk1VWATOfwVDXWsRMnpp3YTaHLTlk2bT9ISSl2IPis6nSlw1NQZGKtbWieqqY9A_ltUg7b19MQE3mHNFRXYXAqTB2NVvrpRmpZb67yG1a9suEGBw3VOM9JloRfNHAdRfCbMGGkxecJtfVO7hngbZNK867X-nhkd6427kWam54XqkceLHumxlAdgWxX3zfw8PTpIinOL_IeULKYd3iUhfAYSvd7OA
+
+eureka:
+  client:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+

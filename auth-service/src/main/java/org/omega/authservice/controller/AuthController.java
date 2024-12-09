@@ -29,7 +29,7 @@ public class AuthController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('ROLE_SUPERVISOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Validated UserDTO request) {
         authService.registerUser(request);
