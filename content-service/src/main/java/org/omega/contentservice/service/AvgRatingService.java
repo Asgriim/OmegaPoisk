@@ -12,7 +12,6 @@ public class AvgRatingService {
 
     public Double getAvgRatingByContentId(Long contentId) {
         AvgRatingDTO avgById = avgRatingFeignClient.getAvgById(contentId.intValue());
-        System.out.println("avgById = " + avgById);
         if (avgById != null) {
             return avgById.getValue();
         }

@@ -56,7 +56,7 @@ spring:
           filters:
             - name: CircuitBreaker
               args:
-                name: reviewCircuitBreaker
+                name: contentCircuitBreaker
                 fallbackUri: forward:/fallback
 server:
   port: 8080
@@ -71,10 +71,13 @@ resilience4j:
     configs:
       omega:
         slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
         failureRateThreshold: 52
-        waitDurationInOpenState: 5s
+        slowCallRateThreshold: 75
+        waitDurationInOpenState: 15s
         permittedNumberOfCallsInHalfOpenState: 2
         minimumNumberOfCalls: 10
+        slowCallDurationThreshold: 15s
     instances:
       tagCircuitBreaker:
         base-config: omega

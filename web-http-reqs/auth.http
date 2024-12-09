@@ -1,0 +1,11 @@
+###
+POST localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "id": 0,
+  "login": "user",
+  "email": "user@a.ru",
+  "pass": "user"
+}
+###

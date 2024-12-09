@@ -75,8 +75,6 @@ services:
 
   auth-service:
     build: ./auth-service
-    ports:
-      - "8084:8084"
     depends_on:
       eureka-server:
         condition: service_healthy
@@ -86,72 +84,69 @@ services:
       EUREKA_URL: http://eureka-server:8761/eureka/
       CONFIG_URL: http://config-server:8800
 
-#  tag-service:
-##    build: ./tag-service
-#    build:
-#      context: .
-#      dockerfile: ./tag-service/Dockerfile
-##    ports:
-##      - "8081:8081"
-#    depends_on:
-#      eureka-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#    environment:
-#      EUREKA_URL: http://eureka-server:8761/eureka/
-#      CONFIG_URL: http://config-server:8800
-#
-#  studio-service:
-#    build:
-#      context: .
-#      dockerfile: ./studio-service/Dockerfile
-#    depends_on:
-#      eureka-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#    environment:
-#      EUREKA_URL: http://eureka-server:8761/eureka/
-#      CONFIG_URL: http://config-server:8800
-#
-#  rating-service:
-#    build:
-#      context: .
-#      dockerfile: ./rating-service/Dockerfile
-#    depends_on:
-#      eureka-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#    environment:
-#      EUREKA_URL: http://eureka-server:8761/eureka/
-#      CONFIG_URL: http://config-server:8800
-#
-#  review-service:
-#    build:
-#      context: .
-#      dockerfile: ./review-service/Dockerfile
-#    depends_on:
-#      eureka-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#    environment:
-#      EUREKA_URL: http://eureka-server:8761/eureka/
-#      CONFIG_URL: http://config-server:8800
-#
-#  content-service:
-#    build:
-#      context: .
-#      dockerfile: ./content-service/Dockerfile
-#    depends_on:
-#      eureka-server:
-#        condition: service_healthy
-#      config-server:
-#        condition: service_healthy
-#    environment:
-#      EUREKA_URL: http://eureka-server:8761/eureka/
-#      CONFIG_URL: http://config-server:8800
+  tag-service:
+    build:
+      context: .
+      dockerfile: ./tag-service/Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
+
+  studio-service:
+    build:
+      context: .
+      dockerfile: ./studio-service/Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
+
+  rating-service:
+    build:
+      context: .
+      dockerfile: ./rating-service/Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
+
+  review-service:
+    build:
+      context: .
+      dockerfile: ./review-service/Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
+
+  content-service:
+    build:
+      context: .
+      dockerfile: ./content-service/Dockerfile
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
 volumes:
   postgres_data:
