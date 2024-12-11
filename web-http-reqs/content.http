@@ -1,0 +1,22 @@
+@token =eyJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1NVUEVSVklTT1IiXSwiaWQiOjcsImVuYWJsZWQiOnRydWUsInVzZXJuYW1lIjoidGVzdCIsInN1YiI6InRlc3QiLCJpYXQiOjE3MzM4MzQxOTEsImV4cCI6MTczNDI2NjE5MX0.diWqBj3EsRnVzIADgzGILLIFq0_4qHBpn990tGDHzDwXuRPvE-W1iaIsYmAk6rDe8GbGtNR1DsjvBQYHUiGAokenncmZ4t9oNVGHYaDtsCpblIn2eYLa9R_z0WpK12l3_hTX4Q_UNOzw9zinTlmojZVNOIBB0GCsgi05BtCi_bJbbN2H-LtW6okrStxhxmi9AVH1pbZo9x_HjJHDQ_tHidp5ccmFnyRlyBxFnHMq980xdFO8zzrM7moEdLhu9P25Qw01f_HOiW_bqZlx-0q2W2nkIwt4YVyeSpFDVEaTKbRInwU7iFETORAmxEa_jcCQqxWQ_igcb6NQAzWpStA75Q
+
+@content=anime
+
+###
+GET localhost:8080/api/v1/content/{{content}}}?page=0
+Authorization: Bearer {{token}}}
+
+###
+GET localhost:8080/api/v1/content/{{content}}/card?page=0
+Authorization: Bearer {{token}}}
+
+###
+POST localhost:8080/api/v1/content/{{content}}
+Content-Type: application/json
+
+{
+      "id": 0,
+      "title": "title",
+      "description": "desc",
+      "series_num": 26
+}
