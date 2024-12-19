@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Test</title>
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <title>WebSocket STOMP Test</title>
+
+    <!-- Import map for @stomp/stompjs -->
+    <script type="importmap">
+        {
+          "imports": {
+            "@stomp/stompjs": "https://ga.jspm.io/npm:@stomp/stompjs@7.0.0/esm6/index.js"
+          }
+        }
+    </script>
+
+    <!-- ES Module Shims (polyfill for older browsers) -->
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.5.1/dist/es-module-shims.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <h1>WebSocket STOMP Test</h1>
@@ -21,30 +31,34 @@
     <ul id="messages"></ul>
 </div>
 
-<script>
-    let stompClient = null;
+<script type="module">
+    import { Client } from '@stomp/stompjs';
+
+    let client;
 
     function connect() {
-        const socket = new SockJS('http://localhost:8065/ws/notifications');
-        stompClient = Stomp.over(socket);
-
-        stompClient.connect({}, frame => {
-            console.log('Connected: ' + frame);
-
-            stompClient.subscribe('/topic/notifications', message => {
-                displayMessage(message.body);
-            });
-        }, error => {
-            console.error('Ошибка подключения:', error);
+        client = new Client({
+            brokerURL: 'ws://localhost:8065/ws/notifications', // Замените на ваш WebSocket URL
+            onConnect: () => {
+                console.log('Connected');
+                client.subscribe('/topic/notifications', message => {
+                    displayMessage(message.body);
+                });
+            },
+            onWebSocketError: error => {
+                console.error('Ошибка подключения:', error);
+            }
         });
+
+        client.activate();
     }
 
     function sendMessage() {
         const messageInput = document.getElementById('messageInput');
         const message = messageInput.value;
 
-        if (stompClient && stompClient.connected) {
-            stompClient.send('/app/sendNotification', {}, JSON.stringify({ content: message }));
+        if (client && client.connected) {
+            client.publish({ destination: '/app/sendNotification', body: JSON.stringify({ content: message }) });
             messageInput.value = '';
         } else {
             console.error('Не подключен к серверу WebSocket');

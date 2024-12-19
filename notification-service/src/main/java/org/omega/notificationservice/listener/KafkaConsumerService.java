@@ -16,7 +16,7 @@ public class KafkaConsumerService {
     @KafkaListener(topics = "notification.content", groupId = "org-omega")
     public void listen(String message) {
         System.out.println("Received message: " + message);
-        messagingTemplate.convertAndSend("/ws/notifications", message);
+        messagingTemplate.convertAndSend("/topic/notifications", message);
 
         // Add your business logic here
     }
