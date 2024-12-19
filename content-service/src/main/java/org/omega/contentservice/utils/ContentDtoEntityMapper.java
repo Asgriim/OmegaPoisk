@@ -1,6 +1,7 @@
 package org.omega.contentservice.utils;
 
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.omega.contentservice.dto.ContentCardDTO;
 import org.omega.contentservice.dto.ContentDTO;
@@ -12,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Getter
 public class ContentDtoEntityMapper <T extends Content, D extends ContentDTO> {
 
     private final Class<D> contentDtoClass;

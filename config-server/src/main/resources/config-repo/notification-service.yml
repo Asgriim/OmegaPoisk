@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: notification-service
+#  datasource:
+#    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres-db:5432/omega_db}
+#    username: ${SPRING_DATASOURCE_USERNAME:omega}
+#    password: ${SPRING_DATASOURCE_PASSWORD:omega}
+#    driver-class-name: org.postgresql.Driver
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  kafka:
+    bootstrap-servers: ${KAFKA_URLS:kafka1:9092,kafka2:9093,kafka3:9094}
+#    topic: notification.content
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    properties:
+      linger.ms: 10
+      retries: 3
+
+server:
+  port: 8065
+
+# API prefix
+api:
+  prefix: /api/v1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
+

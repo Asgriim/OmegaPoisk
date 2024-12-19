@@ -1,10 +1,10 @@
 package org.omega.common.reactive.security;
 
 import io.jsonwebtoken.Claims;
-import org.omega.comon.core.dto.UserDetailsDto;
-import org.omega.comon.core.security.JwtUtils;
-import org.omega.comon.core.security.SecurityHelper;
-import org.omega.comon.core.security.SecurityHelperClass;
+import org.omega.common.core.dto.UserDetailsDto;
+import org.omega.common.core.security.JwtUtils;
+import org.omega.common.core.security.SecurityHelper;
+import org.omega.common.core.security.SecurityHelperClass;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,7 +12,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;

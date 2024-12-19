@@ -1,4 +1,4 @@
-package org.omega.comon.core.dto;
+package org.omega.common.core.dto;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

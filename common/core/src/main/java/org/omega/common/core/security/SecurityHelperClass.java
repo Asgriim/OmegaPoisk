@@ -1,7 +1,4 @@
-package org.omega.comon.core.security;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+package org.omega.common.core.security;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;

@@ -1,5 +1,6 @@
 package org.omega.contentservice.controller;
 
+import org.omega.common.core.kafka.KafkaProducerService;
 import org.omega.contentservice.dto.ContentCardDTO;
 import org.omega.contentservice.dto.ContentDTO;
 import org.omega.contentservice.entity.Content;
@@ -21,10 +22,14 @@ import java.util.List;
 public abstract class AbstractContentController <T extends Content, DTO extends ContentDTO> {
     private final AbstractContentService<T> contentService;
     private final ContentDtoEntityMapper<T, DTO> mapper;
+    private final String contentName;
+    private final KafkaProducerService kafkaProducerService;
 
-    public AbstractContentController(AbstractContentService<T> contentService, Class<DTO> dtoClass) {
+    public AbstractContentController(AbstractContentService<T> contentService, Class<DTO> dtoClass, KafkaProducerService kafkaProducerService) {
         this.contentService = contentService;
         this.mapper = new ContentDtoEntityMapper<>(dtoClass);
+        this.kafkaProducerService = kafkaProducerService;
+        this.contentName = mapper.getContentDtoClass().getSimpleName().replace("DTO", "");
     }
 
     @PreAuthorize("hasAnyRole('USER')")
@@ -101,6 +106,8 @@ public abstract class AbstractContentController <T extends Content, DTO extends 
     @PostMapping(value = {"","/"})
     public ResponseEntity<?> create(@RequestBody @Validated T content) {
         T createdContent = contentService.create(content);
+        String message = String.format("%s: create content: with id %d", contentName, createdContent.getId());
+        kafkaProducerService.sendMessage(message);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapContentToDTO(createdContent));
     }
 
@@ -108,6 +115,8 @@ public abstract class AbstractContentController <T extends Content, DTO extends 
     @PutMapping(value = {"","/"})
     public ResponseEntity<?> update(@RequestBody @Validated T content) {
         T updatedContent = contentService.update(content);
+        String message = String.format("%s: update content: with id %d", contentName, updatedContent.getId());
+        kafkaProducerService.sendMessage(message);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapContentToDTO(updatedContent));
     }
 
@@ -115,6 +124,8 @@ public abstract class AbstractContentController <T extends Content, DTO extends 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         contentService.delete(id);
+        String message = String.format("%s: delete content: with id %d", contentName, id);
+        kafkaProducerService.sendMessage(message);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

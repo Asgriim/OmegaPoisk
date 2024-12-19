@@ -9,6 +9,17 @@ spring:
     driver-class-name: org.postgresql.Driver
   jackson:
     property-naming-strategy: SNAKE_CASE
+  kafka:
+    bootstrap-servers: ${KAFKA_URLS:kafka1:9092,kafka2:9093,kafka3:9094}
+    topic: notification.content
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      session.timeout.ms: 60000
+      enable.auto.commit: true
+    properties:
+      linger.ms: 10
+      retries: 3
 
 server:
   port: 8089
@@ -25,3 +36,9 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}
+
+topics:
+  create:
+    - name: ${spring.kafka.topic}
+      partitions: 5
+      replication-factor: 3

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @EnableFeignClients
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.omega.contentservice", "org.omega.common.web.security"})
+@ComponentScan(basePackages = {"org.omega.contentservice", "org.omega.common.web.security", "org.omega.common.core.kafka"})
 public class ContentServiceApplication {
 
     public static void main(String[] args) {

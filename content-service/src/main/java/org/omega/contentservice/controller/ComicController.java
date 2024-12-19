@@ -1,5 +1,6 @@
 package org.omega.contentservice.controller;
 
+import org.omega.common.core.kafka.KafkaProducerService;
 import org.omega.contentservice.dto.ComicDTO;
 import org.omega.contentservice.entity.Comic;
 import org.omega.contentservice.service.ComicContentService;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/content/comic")
 public class ComicController extends AbstractContentController<Comic, ComicDTO> {
 
-    public ComicController(ComicContentService comicContentService) {
-        super(comicContentService, ComicDTO.class);
+    public ComicController(ComicContentService comicContentService, KafkaProducerService kafkaProducerService) {
+        super(comicContentService, ComicDTO.class, kafkaProducerService);
     }
 }

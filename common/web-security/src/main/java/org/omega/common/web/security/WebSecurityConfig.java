@@ -1,6 +1,6 @@
 package org.omega.common.web.security;
 
-import org.omega.comon.core.security.BaseSecurityConfiguration;
+import org.omega.common.core.security.BaseSecurityConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
