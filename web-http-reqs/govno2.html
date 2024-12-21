@@ -78,10 +78,10 @@
                 data: base64Image     // Поле с изображением в формате Base64
             };
             const messageJson = JSON.stringify(messageObject); // Преобразование в JSON-строку
-            console.log(messageJson);
 
             if (client && client.connected) {
                 client.publish({ destination: '/app/upload', body: messageJson });
+                //TODO здесь надо получить реальное подтверждение от сервера  /topic/status
                 console.log('Изображение отправлено');
             } else {
                 console.error('Не подключен к серверу WebSocket');

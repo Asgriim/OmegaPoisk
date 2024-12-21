@@ -224,8 +224,8 @@ services:
     build:
       context: .
       dockerfile: ./notification-service/Dockerfile
-    ports:
-      - "8065:8065"
+#    ports:
+#      - "8065:8065"
     depends_on:
       eureka-server:
         condition: service_healthy

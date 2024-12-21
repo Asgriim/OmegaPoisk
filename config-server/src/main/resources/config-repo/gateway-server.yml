@@ -58,8 +58,11 @@ spring:
               args:
                 name: contentCircuitBreaker
                 fallbackUri: forward:/fallback
-server:
-  port: 8080
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/ws/notifications/**
+
 
 eureka:
   client:

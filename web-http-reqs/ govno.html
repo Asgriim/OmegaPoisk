@@ -38,7 +38,7 @@
 
     function connect() {
         client = new Client({
-            brokerURL: 'ws://localhost:8065/ws/notifications', // Замените на ваш WebSocket URL
+            brokerURL: 'ws://localhost:8080/ws/notifications', // Замените на ваш WebSocket URL
             onConnect: () => {
                 console.log('Connected');
                 client.subscribe('/topic/notifications', message => {
