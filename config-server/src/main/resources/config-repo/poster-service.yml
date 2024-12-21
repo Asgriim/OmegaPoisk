@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: poster-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres-db:5432/omega_db}
+    username: ${SPRING_DATASOURCE_USERNAME:omega}
+    password: ${SPRING_DATASOURCE_PASSWORD:omega}
+    driver-class-name: org.postgresql.Driver
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  websocket:
+    message-size-limit: 100MB
+    buffer-size-limit: 100MB
+
+server:
+  port: 8066
+  tomcat:
+    max-http-header-size: 65536 # Увеличивает максимальный размер HTTP-заголовка
+    max-swallow-size: 100MB     # Увеличивает максимальный размер тела WebSocket сообщения
+# API prefix
+api:
+  prefix: /api/v1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://eureka-server:8761/eureka/}

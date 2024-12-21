@@ -35,6 +35,7 @@ services:
       - zookeeper
     image: 'confluentinc/cp-kafka:7.7.2'
     container_name: kafka1
+    restart: on-failure
     ports:
       - "29092:29092"
       - "9092:9092"
@@ -54,6 +55,7 @@ services:
       - zookeeper
     image: 'confluentinc/cp-kafka:7.7.2'
     container_name: kafka2
+    restart: on-failure
     ports:
       - "29093:29093"
       - "9093:9093"
@@ -73,6 +75,7 @@ services:
       - zookeeper
     image: 'confluentinc/cp-kafka:7.7.2'
     container_name: kafka3
+    restart: on-failure
     ports:
       - "29094:29094"
       - "9094:9094"
@@ -223,6 +226,20 @@ services:
       dockerfile: ./notification-service/Dockerfile
     ports:
       - "8065:8065"
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      CONFIG_URL: http://config-server:8800
+  poster-service:
+    build:
+      context: .
+      dockerfile: ./poster-service/Dockerfile
+    ports:
+      - "8066:8066"
     depends_on:
       eureka-server:
         condition: service_healthy

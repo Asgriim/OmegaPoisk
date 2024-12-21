@@ -13,6 +13,13 @@
     <artifactId>OmegaPoisk</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>OmegaPoisk</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+    </dependencies>
 
     <packaging>pom</packaging>
     <modules>
@@ -28,6 +35,7 @@
         <module>content-service</module>
         <module>ReportAggregator</module>
         <module>notification-service</module>
+        <module>poster-service</module>
     </modules>
 
 </project>
