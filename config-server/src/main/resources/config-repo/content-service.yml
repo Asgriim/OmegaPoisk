@@ -40,5 +40,5 @@ eureka:
 topics:
   create:
     - name: ${spring.kafka.topic}
-      partitions: 5
-      replication-factor: 3
+      partitions: 2
+      replication-factor: 2

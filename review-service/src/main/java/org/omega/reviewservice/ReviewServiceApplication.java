@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.omega.reviewservice", "org.omega.common.web.security"})
+@ComponentScan(basePackages = {"org.omega.reviewservice", "org.omega.common.web.security", "org.omega.common.core.kafka"})
 public class ReviewServiceApplication {
 
 	public static void main(String[] args) {

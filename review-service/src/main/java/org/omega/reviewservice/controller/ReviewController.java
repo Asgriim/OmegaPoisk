@@ -2,6 +2,7 @@ package org.omega.reviewservice.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.omega.common.core.kafka.KafkaProducerService;
 import org.omega.reviewservice.dto.ReviewDTO;
 import org.omega.reviewservice.entity.Review;
 import org.omega.reviewservice.service.ReviewService;
@@ -22,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
+    private final KafkaProducerService kafkaProducerService;
 
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/{id}")
@@ -44,20 +46,34 @@ public class ReviewController {
     @PostMapping(value = {"","/"})
     public ResponseEntity<?> createReview(@RequestBody @Validated ReviewDTO review) {
         Review created = reviewService.create(review.toEntity());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ReviewDTO(created));
+        ReviewDTO reviewDTO = new ReviewDTO(created);
+
+        String message = String.format("Review created: %s", reviewDTO);
+        kafkaProducerService.sendMessage(message);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewDTO);
     }
 
     @PreAuthorize("hasAnyRole('USER')")
     @PutMapping(value = {"","/"})
     public ResponseEntity<?> updateReview(@RequestBody @Validated ReviewDTO review) {
         Review updated = reviewService.update(review.toEntity());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ReviewDTO(updated));
+        ReviewDTO reviewDTO = new ReviewDTO(updated);
+
+        String message = String.format("Review created: %s", reviewDTO);
+        kafkaProducerService.sendMessage(message);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewDTO);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
         reviewService.delete(id);
+
+        String message = String.format("Review deleted id: %d", id);
+        kafkaProducerService.sendMessage(message);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

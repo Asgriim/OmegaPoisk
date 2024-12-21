@@ -1,6 +1,7 @@
 package org.omega.ratingservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.omega.common.core.kafka.KafkaProducerService;
 import org.omega.ratingservice.dto.AvgRatingDTO;
 import org.omega.ratingservice.dto.RatingDTO;
 import org.omega.ratingservice.entity.AvgRating;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class RatingController {
     private final RatingService ratingService;
     private final AvgRatingService avgRatingService;
+    private final KafkaProducerService kafkaProducerService;
 
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/{id}/avg")
@@ -32,6 +34,10 @@ public class RatingController {
     public ResponseEntity<?> create(@RequestBody @Validated RatingDTO ratingDTO) {
         Rating entity = ratingDTO.toEntity();
         Rating created = ratingService.create(entity);
+
+        String message = String.format("Created new rating: %s", created);
+        kafkaProducerService.sendMessage(message);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(new RatingDTO(created));
     }
 
@@ -40,6 +46,10 @@ public class RatingController {
     public ResponseEntity<?> update(@RequestBody @Validated RatingDTO ratingDTO) {
         Rating entity = ratingDTO.toEntity();
         Rating created = ratingService.update(entity);
+
+        String message = String.format("Updated new rating: %s", created);
+        kafkaProducerService.sendMessage(message);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(new RatingDTO(created));
     }
 
@@ -47,6 +57,10 @@ public class RatingController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
         ratingService.delete(id);
+
+        String message = String.format("Deleted rating with id: %s", id);
+        kafkaProducerService.sendMessage(message);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
