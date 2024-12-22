@@ -82,6 +82,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/*ControllerExceptionHandler*</exclude>
+                        <exclude>**/*WebSocketConfig*</exclude>
                     </excludes>
                 </configuration>
             </plugin>

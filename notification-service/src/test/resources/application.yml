@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: notification-service
+  cloud:
+    config:
+      enabled: false
+  kafka:
+    bootstrap-servers: ${KAFKA_URLS:kafka1:9092,kafka2:9093,kafka3:9094}
+    #    topic: notification.content
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+
+    properties:
+      linger.ms: 10
+      retries: 3
+
+eureka:
+  client:
+    enabled: false
+
+server:
+  port: 8065
+
+# API prefix
+api:
+  prefix: /api/v1
+
+listen:
+  topics: "notification.content,notification.review,notification.rating"
