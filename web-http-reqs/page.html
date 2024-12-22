@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Темный рыцарь</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .image-container {
+            width: 30%;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 100%;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .details {
+            width: 70%;
+            margin-top: 20px;
+        }
+        .details h1 {
+            margin: 0 0 10px;
+        }
+        .details p {
+            margin: 5px 0;
+        }
+        .tags {
+            margin-top: 10px;
+        }
+        .tags span {
+            display: inline-block;
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 5px 5px 0 0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal-content input {
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+        }
+        .modal-content button {
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+        .modal-content button:hover {
+            background-color: #444;
+        }
+    </style>
+    <script type="module">
+        import { Client } from 'https://ga.jspm.io/npm:@stomp/stompjs@7.0.0/esm6/index.js';
+
+        let client;
+
+        window.connect = function connect() {
+            client = new Client({
+                brokerURL: 'ws://localhost:8066/ws/poster',
+                onConnect: () => {
+                    console.log('WebSocket подключен.');
+                    fetchInitialImage();
+                    client.subscribe('/topic/status', message => {
+                        alert(`Ответ сервера: ${message.body}`);
+   			fetchInitialImage();
+                    });
+                },
+                onWebSocketError: error => {
+                    console.error('Ошибка подключения:', error);
+                }
+            });
+
+            client.activate();
+        }
+
+        window.fetchInitialImage = function fetchInitialImage() {
+            fetch('http://localhost:8066/api/v1/poster/95')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка при получении изображения.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.data) {
+                        const img = document.querySelector('.image-container img');
+                        img.src = `data:image/png;base64,${data.data}`;
+                    }
+                })
+                .catch(error => console.error('Ошибка загрузки изображения:', error));
+        }
+
+        window.handleImageClick = function handleImageClick() {
+            document.getElementById('modal').style.display = 'flex';
+        };
+
+        window.closeModal = function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        window.handleSave = function handleSave() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Пожалуйста, выберите файл.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                const base64Image = reader.result.split(',')[1];
+                const messageObject = {
+		    content_id: 95,
+                    data: base64Image
+                };
+                const messageJson = JSON.stringify(messageObject);
+
+                if (client && client.connected) {
+                    client.publish({ destination: '/app/upload', body: messageJson });
+                    console.log('Изображение отправлено.');
+                } else {
+                    console.error('Не подключен к WebSocket серверу.');
+                }
+
+                closeModal();
+            };
+
+            reader.onerror = error => {
+                console.error('Ошибка чтения файла:', error);
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        window.onload = connect;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="details">
+            <h1>Samurai Legends</h1>
+            <p><strong>Rating:</strong> 4</p>
+            <p><strong>Series:</strong> 26</p>
+            <p><strong>Description:</strong> A tale of honor and revenge among samurai.</p>
+        </div>
+        <div class="image-container">
+            <img src="" alt="Темный рыцарь" onclick="handleImageClick()">
+        </div>
+        <div class="tags">
+            <span>Action</span>
+            <span>Drama</span>
+        </div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2>Загрузить изображение</h2>
+            <input type="file" id="fileInput">
+            <button onclick="handleSave()">Сохранить</button>
+            <button onclick="closeModal()">Отмена</button>
+        </div>
+    </div>
+</body>
+</html>

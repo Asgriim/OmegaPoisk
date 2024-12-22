@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket STOMP Test</title>
+
+    <!-- Import map for @stomp/stompjs -->
+    <script type="importmap">
+        {
+          "imports": {
+            "@stomp/stompjs": "https://ga.jspm.io/npm:@stomp/stompjs@7.0.0/esm6/index.js"
+          }
+        }
+    </script>
+
+    <!-- ES Module Shims (polyfill for older browsers) -->
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.5.1/dist/es-module-shims.js" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        #messages {
+            list-style-type: none;
+            padding: 0;
+        }
+        #messages li {
+            background-color: #333;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WebSocket STOMP Test</h1>
+
+        <div>
+            <h2>Полученные сообщения:</h2>
+            <ul id="messages"></ul>
+        </div>
+    </div>
+
+    <script type="module">
+        import { Client } from '@stomp/stompjs';
+
+        let client;
+
+        function connect() {
+            client = new Client({
+                brokerURL: 'ws://localhost:8080/ws/notifications', // Замените на ваш WebSocket URL
+                onConnect: () => {
+                    console.log('Connected');
+                    client.subscribe('/topic/notifications', message => {
+                        displayMessage(message.body);
+                    });
+                },
+                onWebSocketError: error => {
+                    console.error('Ошибка подключения:', error);
+                }
+            });
+
+            client.activate();
+        }
+
+        function displayMessage(message) {
+            const messagesList = document.getElementById('messages');
+            const messageItem = document.createElement('li');
+            messageItem.textContent = message;
+            messagesList.appendChild(messageItem);
+        }
+
+        window.onload = connect;
+    </script>
+</body>
+</html>
