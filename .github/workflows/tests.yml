@@ -1,4 +1,4 @@
-name: Maven Verify with Testcontainers
+name: Run tests
 
 on:
   push:
@@ -19,8 +19,9 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '17'
+          distribution: 'temurin'
+          cache: maven
 
       - name: Set up Docker
         run: |
@@ -29,15 +30,15 @@ jobs:
           sudo systemctl start docker
           sudo systemctl enable docker
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+#      - name: Cache Maven dependencies
+#        uses: actions/cache@v3
+#        with:
+#          path: ~/.m2/repository
+#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: |
+#            ${{ runner.os }}-maven-
 
-      - name: Run Maven verify
+      - name: Run tests
         run: mvn clean verify
         env:
           DOCKER_HOST: tcp://localhost:2375
