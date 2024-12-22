@@ -182,6 +182,8 @@ services:
       CONFIG_URL: http://config-server:8800
 
   rating-service:
+    ports:
+      - "8086:8086"
     build:
       context: .
       dockerfile: ./rating-service/Dockerfile

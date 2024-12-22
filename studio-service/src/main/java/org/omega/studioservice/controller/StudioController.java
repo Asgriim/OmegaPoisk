@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("${api.prefix}/studio")
 @RequiredArgsConstructor
+@CrossOrigin(originPatterns = "*")
 public class StudioController {
 
     private final StudioService studioService;

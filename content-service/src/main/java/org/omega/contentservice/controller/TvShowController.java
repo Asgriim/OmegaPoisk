@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${api.prefix}/content/tv-show")
+@CrossOrigin(originPatterns = "*")
 public class TvShowController extends AbstractContentController<TvShow, TvShowDTO> {
 
     public TvShowController(TvShowContentService tvShowContentService, KafkaProducerService kafkaProducerService) {

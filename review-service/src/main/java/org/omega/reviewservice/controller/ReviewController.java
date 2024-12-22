@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("${api.prefix}/content/review")
 @RequiredArgsConstructor
+@CrossOrigin(originPatterns = "*")
 public class ReviewController {
     private final ReviewService reviewService;
     private final KafkaProducerService kafkaProducerService;

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${api.prefix}/content/movie")
+@CrossOrigin(originPatterns = "*")
 public class MovieController extends AbstractContentController<Movie, MovieDTO> {
 
     public MovieController(MovieContentService movieContentService, KafkaProducerService kafkaProducerService) {

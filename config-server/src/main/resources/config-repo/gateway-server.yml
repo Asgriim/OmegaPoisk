@@ -62,8 +62,43 @@ spring:
           uri: lb://notification-service
           predicates:
             - Path=/ws/notifications/**
+        - id: poster-service
+          uri: lb://poster-service
+          predicates:
+            - Path=/poster/api-docs
 
-
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    urls:
+      - url: /api/v1/tags/v3/api-docs
+        name: tag-service
+        server:
+          - url: http://localhost:8080
+            description: production server
+      - url: /api/v1/auth/v3/api-docs
+        name: auth-service
+      - url: /api/v1/studio/v3/api-docs
+        name: studio-service
+      - url: /api/v1/content/rating/v3/api-docs
+        name: rating-service
+      - url: /api/v1/content/review/v3/api-docs
+        name: review-service
+      - url: /api/v1/content/v3/api-docs
+        name: content-service
+      - url: /poster/api-docs
+        name: poster-service
+    default-url: /api/v1/content/v3/api-docs
+    disable-swagger-default-url: true
+    path: /swagger-ui
+  security-scheme:
+    jwt:
+      type: http
+      scheme: bearer
+      bearer-format: JWT
 eureka:
   client:
     serviceUrl:

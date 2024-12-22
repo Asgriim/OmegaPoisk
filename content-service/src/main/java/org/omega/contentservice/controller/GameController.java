@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${api.prefix}/content/game")
+@CrossOrigin(originPatterns = "*")
 public class GameController extends AbstractContentController<Game, GameDTO> {
 
     public GameController(GameContentService gameContentService, KafkaProducerService kafkaProducerService) {

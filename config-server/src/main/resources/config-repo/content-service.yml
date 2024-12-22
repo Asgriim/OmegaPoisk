@@ -42,3 +42,13 @@ topics:
     - name: ${spring.kafka.topic}
       partitions: 2
       replication-factor: 2
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api/v1/content/v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /api/v1/content/swagger-ui.html
+    default-url: /api/v1/content/v3/api-docs
+    disable-swagger-default-url: true
