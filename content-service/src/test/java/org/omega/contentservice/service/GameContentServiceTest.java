@@ -25,8 +25,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@MockBean(AnimeController.class)
 @MockBean(GameController.class)
+@MockBean(KafkaProducerService.class)
 @Testcontainers
 class GameContentServiceTest {
 
