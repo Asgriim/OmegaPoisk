@@ -1,0 +1,33 @@
+name: Run tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run tests
+        run: mvn clean verify
+
+      - name: Export Jacoco report archive as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report-archive
+          path: ReportAggregator/target/site/jacoco-aggregate

@@ -12,14 +12,13 @@ public class PosterService {
     final PosterRepository posterRepository;
 
     @Transactional
-    public void save(Poster poster) {
+    public Poster save(Poster poster) {
         Poster byContentId = getByContentId(poster.getContentId());
         if (byContentId != null) {
             byContentId.setData(poster.getData());
-            posterRepository.save(byContentId);
-            return;
+            return posterRepository.save(byContentId);
         }
-        posterRepository.save(poster);
+        return posterRepository.save(poster);
     }
 
     public Poster getByContentId(Integer contentId) {

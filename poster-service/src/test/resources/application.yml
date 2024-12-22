@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: poster-service
+  cloud:
+    config:
+      enabled: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  websocket:
+    message-size-limit: 100MB
+    buffer-size-limit: 100MB
+
+eureka:
+  client:
+    enabled: false
+
+server:
+  port: 8066
+  tomcat:
+    max-http-header-size: 65536 # Увеличивает максимальный размер HTTP-заголовка
+    max-swallow-size: 100MB     # Увеличивает максимальный размер тела WebSocket сообщения
+# API prefix
+api:
+  prefix: /api/v1

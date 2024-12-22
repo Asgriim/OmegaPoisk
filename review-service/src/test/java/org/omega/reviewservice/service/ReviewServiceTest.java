@@ -2,11 +2,14 @@ package org.omega.reviewservice.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.omega.common.core.kafka.KafkaProducerService;
+import org.omega.reviewservice.controller.ReviewController;
 import org.omega.reviewservice.entity.Review;
 import org.omega.reviewservice.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -15,7 +18,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+@MockBean(ReviewController.class)
+@MockBean(KafkaProducerService.class)
 @Testcontainers
 class ReviewServiceTest {
     @Autowired

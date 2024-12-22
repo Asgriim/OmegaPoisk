@@ -12,6 +12,10 @@ public class KafkaConsumerService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    public KafkaConsumerService(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
     @KafkaListener(topics = "#{'${listen.topics}'.split(',')}", groupId = "org-omega")
     public void listen(String message) {
         System.out.println("Received message: " + message);

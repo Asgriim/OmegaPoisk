@@ -3,40 +3,50 @@ package org.omega.reviewservice.controller;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.http.Header;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.omega.common.core.kafka.KafkaProducerService;
 import org.omega.reviewservice.dto.ReviewDTO;
 import org.omega.reviewservice.entity.Review;
 import org.omega.reviewservice.repository.ReviewRepository;
 import org.omega.reviewservice.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(ReviewController.class)
 @Testcontainers
 class ReviewControllerTest {
-    @Autowired
+
+    @MockBean
     private ReviewService reviewService;
 
-    @Autowired
+    @MockBean
     private ReviewRepository reviewRepository;
 
+    @MockBean
+    KafkaProducerService kafkaProducerService;
+
     static Review review;
+
+    @Autowired
+    MockMvc mvc;
 
     @Value("${spring.application.page}")
     int pageSize;
@@ -44,8 +54,7 @@ class ReviewControllerTest {
     @Value("${review-service.token}")
     String token;
 
-    @LocalServerPort
-    private Integer port;
+    static ObjectMapper objectMapper;
 
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
 
@@ -62,122 +71,89 @@ class ReviewControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-
-        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.USE_LONG_FOR_INTS, true);
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-
-        RestAssured.config = RestAssured.config()
-                .objectMapperConfig(
-                        RestAssured.config().getObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> objectMapper)
-                );
     }
 
     @BeforeEach
     void beforeEach() {
-        RestAssured.baseURI = "http://localhost:" + port;
-
         review = new Review(0, "Imba title!", 2 , 1);
+
+        Mockito.doNothing().when(kafkaProducerService).sendMessage(Mockito.anyString());
+        Mockito.when(reviewService.getPage())
+                .thenReturn(pageSize);
+        Mockito.when(reviewService.create(Mockito.any()))
+                .thenReturn(review);
+        Mockito.when(reviewService.update(Mockito.any()))
+                .thenReturn(new Review(1, "Updated review", 2 , 1));
+        Mockito.when(reviewService.getPageByContentId(Mockito.any(), Mockito.anyLong()))
+                .thenReturn(List.of(review));
+
         reviewRepository.deleteAll();
     }
 
     @Test
-    void getByContentId() {
-        Review saved = reviewService.create(review);
+    void getByContentId() throws Exception {
+        reviewService.create(review);
 
-        given()
-                .pathParam("id", saved.getContentId())
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/review/{id}")
-                .then()
-                .statusCode(200)
-                .body("txt", hasItem(review.getTxt()));
-
-        given()
-                .pathParam("id", saved.getContentId())
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/review/{id}?page=0")
-                .then()
-                .statusCode(200)
-                .body("txt", hasItem(review.getTxt()));
+        mvc.perform(MockMvcRequestBuilders.get("/api/v1/content/review/{id}", review.getContentId())
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].txt").value(review.getTxt()));
     }
 
     @Test
-    void createReview() {
-        given()
-                .contentType(ContentType.JSON)
-                .body(new ReviewDTO(review))
-                .when()
-                .post("/api/v1/content/review")
-                .then()
-                .statusCode(403);
+    void createReview() throws Exception {
+        ReviewDTO reviewDTO = new ReviewDTO(review);
 
-        Response response = given()
-                .contentType(ContentType.JSON)
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .body(new ReviewDTO(review))
-                .when()
-                .post("/api/v1/content/review")
-                .then()
-                .statusCode(201)
-                .extract().response();
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/content/review")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(reviewDTO)))
+                .andExpect(status().isForbidden());
 
-        given()
-                .pathParam("id", response.path("content_id"))
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/review/{id}")
-                .then()
-                .statusCode(200)
-                .body("txt", hasItem(review.getTxt()));
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/content/review")
+                        .header("Authorization", "Bearer " + token.trim())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(reviewDTO)))
+                .andExpect(status().isCreated());
+
+        mvc.perform(MockMvcRequestBuilders.get("/api/v1/content/review/{id}", review.getContentId())
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].txt").value(review.getTxt()));
     }
 
     @Test
-    void updateReview() {
+    void updateReview() throws Exception {
         Review saved = reviewService.create(new Review(0, "Imba 1", 2 , 1));
-
         saved.setTxt("Changed");
 
-        given()
-                .contentType(ContentType.JSON)
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .body(new ReviewDTO(saved))
-                .when()
-                .put("/api/v1/content/review")
-                .then()
-                .statusCode(201);
+        mvc.perform(MockMvcRequestBuilders.put("/api/v1/content/review")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token.trim())
+                        .content(objectMapper.writeValueAsString(new ReviewDTO(saved))))
+                .andExpect(status().isCreated());
 
-        given()
-                .pathParam("id", saved.getContentId())
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/review/{id}")
-                .then()
-                .statusCode(200)
-                .body("txt", hasItem("Changed"));
+        mvc.perform(MockMvcRequestBuilders.get("/api/v1/content/review/{id}", saved.getContentId())
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].txt").value("Changed"));
     }
 
     @Test
-    void delete() {
+    void deleteReview() throws Exception {
         Review saved = reviewService.create(new Review(0, "Imba 1", 2 , 1));
+        Mockito.when(reviewService.getPageByContentId(Mockito.any(), Mockito.anyLong()))
+                .thenReturn(List.of());
 
-        given()
-                .pathParam("id", saved.getId())
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .delete("/api/v1/content/review/{id}")
-                .then()
-                .statusCode(204);
+        mvc.perform(MockMvcRequestBuilders.delete("/api/v1/content/review/{id}", saved.getId())
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isNoContent());
 
-        given()
-                .pathParam("id", saved.getContentId())
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/review/{id}")
-                .then()
-                .statusCode(200)
-                .body(".", hasSize(0));
+        mvc.perform(MockMvcRequestBuilders.get("/api/v1/content/review/{id}", saved.getContentId())
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 }

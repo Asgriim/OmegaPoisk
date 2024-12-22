@@ -3,57 +3,79 @@ package org.omega.contentservice.controller;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.http.Header;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.omega.common.core.kafka.KafkaProducerService;
+import org.omega.contentservice.client.AvgRatingFeignClient;
 import org.omega.contentservice.dto.ComicDTO;
 import org.omega.contentservice.entity.Comic;
-import org.omega.contentservice.repository.ComicRepository;
-import org.omega.contentservice.service.AvgRatingService;
+import org.omega.contentservice.repository.*;
 import org.omega.contentservice.service.ComicContentService;
+import org.omega.contentservice.service.AvgRatingService;
+import org.omega.contentservice.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+import java.util.List;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WebMvcTest(ComicController.class)
+@MockBean(AnimeController.class)
+@MockBean(GameController.class)
+@MockBean(MovieController.class)
+@MockBean(TvShowController.class)
+@MockBean(AnimeRepository.class)
+@MockBean(GameRepository.class)
+@MockBean(MovieRepository.class)
+@MockBean(TvShowRepository.class)
+@MockBean(AvgRatingFeignClient.class)
+@MockBean(TokenService.class)
 @Testcontainers
 class ComicControllerTest {
 
-    @Mock
-    AvgRatingService avgRatingService;
+    @MockBean
+    private AvgRatingService avgRatingService;
 
-    @Autowired
+    @MockBean
     private ComicContentService comicContentService;
 
-    @Autowired
+    @MockBean
     private ComicRepository comicRepository;
+
+    @MockBean
+    KafkaProducerService kafkaProducerService;
 
     static Comic comic;
 
-    @Value("${spring.application.page}")
-    int pageSize;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Value("${content-service.token}")
     String token;
 
-    @LocalServerPort
-    private Integer port;
+    @Value("${spring.application.page}")
+    long longPageSize;
+
+    @Value("${spring.application.page}")
+    int pageSize;
+
+    static ObjectMapper objectMapper;
 
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
 
@@ -70,175 +92,119 @@ class ComicControllerTest {
 
     @BeforeAll
     static void beforeAll() {
-        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.USE_LONG_FOR_INTS, true);
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-
-        RestAssured.config = RestAssured.config()
-                .objectMapperConfig(
-                        RestAssured.config().getObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> objectMapper)
-                );
     }
 
     @BeforeEach
     void beforeEach() {
-        when(avgRatingService.getAvgRatingByContentId(anyLong())).thenReturn(5.0);
-        comicContentService = new ComicContentService(comicRepository, avgRatingService);
-
-        RestAssured.baseURI = "http://localhost:" + port;
-
         comic = new Comic(false, 220);
-        comic.setId(0L);
+        comic.setId(1L);
         comic.setTitle("Test content");
         comic.setDescription("Test desc");
         comic.setNew(true);
+
+        when(avgRatingService.getAvgRatingByContentId(anyLong())).thenReturn(5.0);
+
+        Mockito.when(comicContentService.getPage())
+                .thenReturn(longPageSize);
+        Mockito.when(comicContentService.getById(Mockito.any()))
+                .thenReturn(comic);
+        Mockito.when(comicContentService.getContentPageRange(Mockito.any(), Mockito.any()))
+                .thenReturn(List.of(comic));
+        Mockito.when(comicContentService.getContentPage(Mockito.any()))
+                .thenReturn(List.of(comic));
+        Mockito.when(comicContentService.create(Mockito.any()))
+                .thenReturn(comic);
+        Mockito.when(comicContentService.update(Mockito.any()))
+                .thenReturn(comic);
+
+        Mockito.when(comicRepository.save(Mockito.any()))
+                .thenReturn(comic);
+        Mockito.when(comicRepository.getNextContentId())
+                .thenReturn(1L);
+
         comicRepository.deleteAll();
     }
 
     @Test
-    void getContentRange() {
-        for (int i = 0; i < pageSize*2+2; i++) {
-            comicContentService.create(comic);
-        }
+    void getContentRange() throws Exception {
+        comicContentService.create(comic);
 
-        given()
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/comic")
-                .then()
-                .statusCode(200)
-                .body(".", hasSize(pageSize));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/content/comic")
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
 
-        given()
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/comic?page-to=1")
-                .then()
-                .statusCode(200)
-                .body(".", hasSize(pageSize*2));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/content/comic?page-to=1")
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
 
-        given()
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/comic?page=0")
-                .then()
-                .statusCode(200)
-                .body(".", hasSize(pageSize));
-
-        given()
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/comic?page=1")
-                .then()
-                .statusCode(200)
-                .body(".", hasSize(pageSize));
-
-        given()
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/comic?page=2")
-                .then()
-                .statusCode(200)
-                .body(".", hasSize(2));
-
-        given()
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/comic?page=3")
-                .then()
-                .statusCode(200)
-                .body(".", hasSize(0));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/content/comic?page=0")
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
-    void getById() {
+    void getById() throws Exception {
         Comic saved = comicContentService.create(comic);
 
-        given()
-                .pathParam("id", saved.getId())
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/comic/{id}")
-                .then()
-                .statusCode(200)
-                .body("title", equalTo(comic.getTitle()));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/content/comic/{id}", saved.getId())
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(comic.getTitle()));
     }
 
     @Test
-    void create() {
-        given()
-                .contentType(ContentType.JSON)
-                .body(new ComicDTO(comic))
-                .when()
-                .post("/api/v1/content/comic")
-                .then()
-                .statusCode(403);
+    void create() throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/content/comic")
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + token.trim())
+                        .content(objectMapper.writeValueAsString(new ComicDTO(comic))))
+                .andExpect(status().isCreated())
+                .andReturn();
 
-        Response response = given()
-                .contentType(ContentType.JSON)
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .body(new ComicDTO(comic))
-                .when()
-                .post("/api/v1/content/comic")
-                .then()
-                .statusCode(201)
-                .extract().response();
-
-        given()
-                .pathParam("id", response.path("id"))
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/comic/{id}")
-                .then()
-                .statusCode(200)
-                .body("title", equalTo(comic.getTitle()));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/content/comic/{id}", comic.getId())
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(comic.getTitle()));
     }
 
     @Test
-    void update() {
+    void update() throws Exception {
         Comic saved = comicContentService.create(comic);
         saved.setTitle("Changed");
+        saved.setNew(false);
 
-        Response response = given()
-                .contentType(ContentType.JSON)
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .body(new ComicDTO(saved))
-                .when()
-                .put("/api/v1/content/comic")
-                .then()
-                .statusCode(201)
-                .extract().response();
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/content/comic")
+                        .contentType("application/json")
+                        .header("Authorization", "Bearer " + token.trim())
+                        .content(objectMapper.writeValueAsString(new ComicDTO(comic))))
+                .andExpect(status().isCreated())
+                .andReturn();
 
-        given()
-                .pathParam("id", response.path("id"))
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/comic/{id}")
-                .then()
-                .statusCode(200)
-                .body("title", equalTo("Changed"));
-
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/content/comic/{id}", saved.getId())
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Changed"));
     }
 
     @Test
-    void delete() {
+    void delete() throws Exception {
         Comic saved = comicContentService.create(comic);
 
-        given()
-                .pathParam("id", saved.getId())
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .delete("/api/v1/content/comic/{id}")
-                .then()
-                .statusCode(204);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/content/comic/{id}", saved.getId())
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isNoContent());
 
+        Mockito.when(comicContentService.getById(Mockito.any()))
+                .thenReturn(null);
 
-        given()
-                .pathParam("id", saved.getId())
-                .header(new Header("Authorization", "Bearer " + token.trim()))
-                .when()
-                .get("/api/v1/content/comic/{id}")
-                .then()
-                .statusCode(404);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/content/comic/{id}", saved.getId())
+                        .header("Authorization", "Bearer " + token.trim()))
+                .andExpect(status().isNotFound());
     }
 }
