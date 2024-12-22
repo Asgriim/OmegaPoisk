@@ -3,6 +3,9 @@ package org.omega.contentservice.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.omega.common.core.kafka.KafkaProducerService;
+import org.omega.contentservice.controller.AnimeController;
+import org.omega.contentservice.controller.GameController;
 import org.omega.contentservice.dto.ComicDTO;
 import org.omega.contentservice.dto.GameDTO;
 import org.omega.contentservice.entity.Game;
@@ -10,6 +13,7 @@ import org.omega.contentservice.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -20,7 +24,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+@MockBean(AnimeController.class)
+@MockBean(GameController.class)
 @Testcontainers
 class GameContentServiceTest {
 
