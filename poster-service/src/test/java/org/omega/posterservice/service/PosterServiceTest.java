@@ -63,6 +63,19 @@ class PosterServiceTest {
     }
 
     @Test
+    void saveWithId() {
+        Poster saved = posterService.save(poster);
+
+        posterService.save(saved);
+
+        Poster savedPoster = posterRepository.findById(saved.getId()).orElse(null);
+        assertNotNull(savedPoster);
+        assertEquals(poster.getId(), savedPoster.getId());
+        assertEquals(poster.getContentId(), savedPoster.getContentId());
+        assertArrayEquals(poster.getData(), savedPoster.getData());
+    }
+
+    @Test
     void getByContentId() {
         posterService.save(poster);
 
