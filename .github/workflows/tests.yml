@@ -28,11 +28,11 @@ jobs:
 
       - name: Archive Jacoco report
         run: |
-          mkdir -p $HOME/jacoco-archive
-          zip -r $HOME/jacoco-archive/jacoco-report.zip ReportAggregator/target/site/jacoco-aggregate
+          mkdir -p ./jacoco-archive
+          zip -r ./jacoco-archive/jacoco-report.zip ReportAggregator/target/site/jacoco-aggregate
 
       - name: Export Jacoco report archive as artifact
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-report-archive
-          path: $HOME/jacoco-archive/jacoco-report.zip
+          path: ./jacoco-archive/jacoco-report.zip
