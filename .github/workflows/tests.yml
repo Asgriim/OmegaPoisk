@@ -26,13 +26,8 @@ jobs:
       - name: Run tests
         run: mvn clean verify
 
-      - name: Archive Jacoco report
-        run: |
-          mkdir -p ./jacoco-archive
-          zip -r ./jacoco-archive/jacoco-report.zip ReportAggregator/target/site/jacoco-aggregate
-
       - name: Export Jacoco report archive as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jacoco-report-archive
-          path: ./jacoco-archive/jacoco-report.zip
+          path: ReportAggregator/target/site/jacoco-aggregate
