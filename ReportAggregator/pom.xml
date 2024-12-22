@@ -41,6 +41,16 @@
             <artifactId>auth-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.omega</groupId>
+            <artifactId>notification-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.omega</groupId>
+            <artifactId>poster-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
