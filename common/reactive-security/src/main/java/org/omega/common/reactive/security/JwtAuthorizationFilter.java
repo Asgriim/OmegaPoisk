@@ -34,8 +34,9 @@ public class JwtAuthorizationFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String token = extractToken(exchange.getRequest().getHeaders());
         if (token == null) {
-            exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
-            return exchange.getResponse().setComplete();
+            return chain.filter(exchange);
+//            exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+//            return exchange.getResponse().setComplete();
         }
 
         return Mono.justOrEmpty(parseClaims(token))

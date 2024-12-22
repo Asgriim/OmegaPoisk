@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${api.prefix}/content/anime")
+@CrossOrigin(originPatterns = "*")
 public class AnimeController extends AbstractContentController<Anime, AnimeDTO> {
 
     public AnimeController(AnimeContentService animeContentService, KafkaProducerService kafkaProducerService) {

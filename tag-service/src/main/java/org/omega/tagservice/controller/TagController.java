@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("${tag-service.api.prefix}/tags")
 @RequiredArgsConstructor
+@CrossOrigin(originPatterns = "*")
 public class TagController {
     private final TagService tagService;
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("${api.prefix}/content/rating")
 @RequiredArgsConstructor
+@CrossOrigin(originPatterns = "*")
 public class RatingController {
     private final RatingService ratingService;
     private final AvgRatingService avgRatingService;
@@ -24,6 +25,7 @@ public class RatingController {
 
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/{id}/avg")
+    @CrossOrigin(originPatterns = "*")
     public ResponseEntity<?> getAvgById(@PathVariable int id) {
         AvgRating avgRating = avgRatingService.getAvgRatingByContentId(id);
         return ResponseEntity.ok(new AvgRatingDTO(avgRating));

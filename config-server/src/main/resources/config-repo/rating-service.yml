@@ -38,3 +38,21 @@ topics:
     - name: ${spring.kafka.topic}
       partitions: 2
       replication-factor: 2
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api/v1/content/rating/v3/api-docs
+  servers:
+    server:
+      url: localhost:8080
+  swagger-ui:
+    enabled: true
+    path: /api/v1/content/rating/swagger-ui.html
+    default-url: /api/v1/content/rating/v3/api-docs
+    disable-swagger-default-url: true
+  security-scheme:
+    jwt:
+      type: http
+      scheme: bearer
+      bearer-format: JWT
