@@ -137,7 +137,7 @@ class TagControllerTest {
                 .when()
                 .post("/api/v1/tags")
                 .then()
-                .statusCode(403);
+                .statusCode(401);
 
         given()
                 .contentType(ContentType.JSON)

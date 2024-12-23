@@ -137,7 +137,7 @@ class StudioControllerTest {
                 .when()
                 .post("/api/v1/studio")
                 .then()
-                .statusCode(403);
+                .statusCode(401);
 
         given()
                 .contentType(ContentType.JSON)
