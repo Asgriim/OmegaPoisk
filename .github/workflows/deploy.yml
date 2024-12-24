@@ -32,10 +32,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+#      - name: Build and Push Docker Images
+#        run: |
+#          docker compose build
+#          for service in eureka-server config-server gateway-server auth-service tag-service studio-service rating-service review-service content-service notification-service poster-service; do
+#            docker tag $service ${{ secrets.DOCKER_USERNAME }}/$service:latest
+#            docker push ${{ secrets.DOCKER_USERNAME }}/$service:latest
+#          done
       - name: Build and Push Docker Images
         run: |
-          docker compose build
-          for service in eureka-server config-server gateway-server auth-service tag-service studio-service rating-service review-service content-service notification-service poster-service; do
+          docker compose build tag-service
+          for service in tag-service; do
             docker tag $service ${{ secrets.DOCKER_USERNAME }}/$service:latest
             docker push ${{ secrets.DOCKER_USERNAME }}/$service:latest
           done
