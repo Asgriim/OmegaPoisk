@@ -34,7 +34,7 @@ jobs:
 
       - name: Build and Push Docker Images
         run: |
-          docker-compose build
+          docker compose build
           for service in eureka-server config-server gateway-server auth-service tag-service studio-service rating-service review-service content-service notification-service poster-service; do
             docker tag $service ${{ secrets.DOCKER_USERNAME }}/$service:latest
             docker push ${{ secrets.DOCKER_USERNAME }}/$service:latest
