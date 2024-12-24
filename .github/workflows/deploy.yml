@@ -23,15 +23,18 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
+#      - name: Build Services
+#        run: |
+#          for dir in eureka-server config-server gateway-server auth-service tag-service studio-service rating-service review-service content-service notification-service poster-service; do
+#            if [ -d "$dir" ]; then
+#              cd "$dir"
+#              ./mvnw clean install -DskipTests
+#              cd ..
+#            fi
+#          done
+
       - name: Build Services
-        run: |
-          for dir in eureka-server config-server gateway-server auth-service tag-service studio-service rating-service review-service content-service notification-service poster-service; do
-            if [ -d "$dir" ]; then
-              cd "$dir"
-              ./mvnw clean package -DskipTests
-              cd ..
-            fi
-          done
+        run: mvn clean install -DskipTests
 
       - name: Log in to DockerHub
         uses: docker/login-action@v2
